@@ -21,7 +21,7 @@ export const metadata = {
 export default function ParLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gray-600">
         <div id="page">
           <BrandStrip />
           <NavBar
