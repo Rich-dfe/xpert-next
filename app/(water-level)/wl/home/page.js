@@ -1,22 +1,23 @@
-import WaterLevelCalibrationForm from "@/app/components/water-level/calibration-form";
+import LoggerConfigForm from "@/app/components/config/Form-logger-config";
+import SelectLoggersForm from "@/app/components/loggers/Select-loggers";
+import MapBox from "@/app/components/loggers/Map-box";
+
+const API_LOGGERS = [
+    { value: '1', label: 'Water Level 1' },
+    { value: '2', label: 'Water Level 2' },
+    { value: '3', label: 'Water Level 3' },
+  ];
 
 export default function WlHome() {
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-4">
-        <div className="mt-8 mb-3 ml-4 mr-4">Logger Dropdown Menu</div>
-        <div className="mt-8 mb-3 ml-4 mr-4">
-          Info Box
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="min-h-[500px]"><SelectLoggersForm loggers={API_LOGGERS} /></div>
+        <div className="min-h-[500px]"><MapBox /></div>
+        <div className="min-h-[500px]"><LoggerConfigForm /></div>
         </div>
-        <div className="mt-8 mb-3 ml-4 mr-4"></div>
-        <div className="mt-8 mb-3 ml-4 mr-4"></div>
-        <div className="mt-8 mb-3 ml-4 mr-4">
-            <WaterLevelCalibrationForm />
-        </div>
-        <div className="mt-8 mb-3 ml-4 mr-4">
-          Sensor config
-        </div>
-      </div>
+    </div>
     </>
   );
 }

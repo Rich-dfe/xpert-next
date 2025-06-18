@@ -1,7 +1,11 @@
-export default function WlReports(){
-    return (
-        <>
-        <h2>This is the WL REPORTS page</h2>
-        </>
-    )
+import ReportForm from "@/app/components/reports/reports-form";
+
+export default function WlReports() {
+  return (
+    <>
+    <div>
+       <ReportForm /> 
+    </div>
+    </>
+  );
 }

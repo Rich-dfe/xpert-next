@@ -18,22 +18,51 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
+const navLinks = [
+  {
+    id: 1,
+    url: "/dt/home",
+    linkText: "Loggers",
+  },
+  {
+    id: 2,
+    url: "/dt/charts",
+    linkText: "charts",
+  },
+  {
+    id: 3,
+    url: "/dt/config",
+    linkText: "Configuration",
+  },
+  {
+    id: 4,
+    url: "/dt/calibration",
+    linkText: "Calibration",
+  },
+  {
+    id: 5,
+    url: "/dt/reports",
+    linkText: "Reports",
+  },
+  {
+    id: 6,
+    url: "/dt/licenses",
+    linkText: "Licenses",
+  },
+  {
+    id: 7,
+    url: "/dt/help",
+    linkText: "Help",
+  },
+];
+
 export default function DtLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gray-600">
         <div id="page">
           <BrandStrip />
-          <NavBar
-            loggersUrl="/rg/home"
-            chartsUrl="/rg/charts"
-            configUrl="/rg/config"
-            calibrationUrl="/rg/calibration"
-            reportsUrl="/rg/reports"
-            groupsUrl="/rg/groups"
-            licensesUrl="/rg/licenses"
-            helpUrl="/rg/help"
-          />
+          <NavBar navLinks={navLinks} />
           {children}
         </div>
       </body>

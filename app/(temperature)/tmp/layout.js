@@ -18,22 +18,51 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
+const navLinks = [
+  {
+    id: 1,
+    url: "/tmp/home",
+    linkText: "Loggers",
+  },
+  {
+    id: 2,
+    url: "/tmp/charts",
+    linkText: "charts",
+  },
+  {
+    id: 3,
+    url: "/tmp/config",
+    linkText: "Configuration",
+  },
+  {
+    id: 4,
+    url: "/tmp/calibration",
+    linkText: "Calibration",
+  },
+  {
+    id: 5,
+    url: "/tmp/reports",
+    linkText: "Reports",
+  },
+  {
+    id: 6,
+    url: "/tmp/licenses",
+    linkText: "Licenses",
+  },
+  {
+    id: 7,
+    url: "/tmp/help",
+    linkText: "Help",
+  },
+];
+
 export default function TmpLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gray-600">
         <div id="page">
           <BrandStrip />
-          <NavBar
-            loggersUrl="/tmp/home"
-            chartsUrl="/tmp/charts"
-            configUrl="/tmp/config"
-            calibrationUrl="/tmp/calibration"
-            reportsUrl="/tmp/reports"
-            groupsUrl="/tmp/groups"
-            licensesUrl="/tmp/licenses"
-            helpUrl="/tmp/help"
-          />
+          <NavBar navLinks={navLinks} />
           {children}
         </div>
       </body>

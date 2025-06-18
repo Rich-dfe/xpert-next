@@ -18,22 +18,51 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
+const navLinks = [
+  {
+    id: 1,
+    url: "/rg/home",
+    linkText: "Loggers",
+  },
+  {
+    id: 2,
+    url: "/rg/charts",
+    linkText: "charts",
+  },
+  {
+    id: 3,
+    url: "/rg/config",
+    linkText: "Configuration",
+  },
+  {
+    id: 4,
+    url: "/rg/calibration",
+    linkText: "Calibration",
+  },
+  {
+    id: 5,
+    url: "/rg/reports",
+    linkText: "Reports",
+  },
+  {
+    id: 6,
+    url: "/rg/licenses",
+    linkText: "Licenses",
+  },
+  {
+    id: 7,
+    url: "/rg/help",
+    linkText: "Help",
+  },
+];
+
 export default function RgLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gray-600">
         <div id="page">
           <BrandStrip />
-          <NavBar
-            loggersUrl="/dt/home"
-            chartsUrl="/dt/charts"
-            configUrl="/dt/config"
-            calibrationUrl="/dt/calibration"
-            reportsUrl="/dt/reports"
-            groupsUrl="/dt/groups"
-            licensesUrl="/dt/licenses"
-            helpUrl="/dt/help"
-          />
+          <NavBar navLinks={navLinks} />
           {children}
         </div>
       </body>

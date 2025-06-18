@@ -18,22 +18,51 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
-export default function ParLayout({ children }) {
+const navLinks = [
+  {
+    id: 1,
+    url: "/sm/home",
+    linkText: "Loggers",
+  },
+  {
+    id: 2,
+    url: "/sm/charts",
+    linkText: "charts",
+  },
+  {
+    id: 3,
+    url: "/sm/config",
+    linkText: "Configuration",
+  },
+  {
+    id: 4,
+    url: "/sm/calibration",
+    linkText: "Calibration",
+  },
+  {
+    id: 5,
+    url: "/sm/reports",
+    linkText: "Reports",
+  },
+  {
+    id: 6,
+    url: "/sm/licenses",
+    linkText: "Licenses",
+  },
+  {
+    id: 7,
+    url: "/sm/help",
+    linkText: "Help",
+  },
+];
+
+export default function SmLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen bg-gray-600">
         <div id="page">
           <BrandStrip />
-          <NavBar
-            loggersUrl="/sm/home"
-            chartsUrl="/sm/charts"
-            configUrl="/sm/config"
-            calibrationUrl="/sm/calibration"
-            reportsUrl="/sm/reports"
-            groupsUrl="/sm/groups"
-            licensesUrl="/sm/licenses"
-            helpUrl="/sm/help"
-          />
+          <NavBar navLinks={navLinks} />
           {children}
         </div>
       </body>
