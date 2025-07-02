@@ -21,7 +21,7 @@ export default function WlGroups() {
     <>
       <>
       <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="min-h-[500px]"><GroupsForm loggers={API_LOGGERS} groups={API_GROUPS}/></div>
         <div className="min-h-[500px]"><ListGroups groups={API_GROUPS}/></div>
         <div className="min-h-[500px]"><ListGroupsLoggers groupLoggers={API_LOGGERS} /></div>

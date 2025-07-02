@@ -9,9 +9,10 @@ function MapBox(){
     <>
     <FormCard>
     <FormStrip text="Location" />
-    <InfoCard>
         <Image className="h-100" src={MapImg} alt="Your Company" />
-    </InfoCard>
+        <div className="flex justify-end text-blue-100 mt-3">
+            172.344° 43.567°
+        </div>
     </FormCard>
     </>
     )

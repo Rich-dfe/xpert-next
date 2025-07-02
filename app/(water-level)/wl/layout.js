@@ -1,7 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import BrandStrip from "../../components/Brand-strip";
 import NavBar from "../../components/Nav-bar";
-import Zappy from "@/app/components/zappy";
 import "../../(home-panel)/globals.css";
 
 const geistSans = Geist({
@@ -19,6 +17,8 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
+const productType = "Water Level";
+
 const navLinks = [
   {
     id: 1,
@@ -31,29 +31,24 @@ const navLinks = [
     linkText: "Charts",
   },
   {
-    id: 4,
+    id: 3,
     url: "/wl/calibration",
     linkText: "Calibration",
   },
   {
-    id: 5,
+    id: 4,
     url: "/wl/reports",
     linkText: "Reports",
   },
   {
-    id: 8,
+    id: 5,
     url: "/wl/groups",
     linkText: "Groups",
-  },
+  },  
   {
-    id: 6,
-    url: "/wl/licenses",
-    linkText: "Licenses",
-  },
-  {
-    id: 7,
-    url: "/wl/help",
-    linkText: "Help",
+    id: 8,
+    url: "/",
+    linkText: "Home",
   },
 ];
 
@@ -62,8 +57,7 @@ export default function WlLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen bg-gray-600">
         <div id="page">
-          <BrandStrip />
-          <NavBar navLinks={navLinks} />
+          <NavBar navLinks={navLinks} productType={productType}/>
           {children}
         </div>
       </body>

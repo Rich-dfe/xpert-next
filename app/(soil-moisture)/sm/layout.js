@@ -18,6 +18,8 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
+const productType="Soil Moisture";
+
 const navLinks = [
   {
     id: 1,
@@ -54,6 +56,11 @@ const navLinks = [
     url: "/sm/help",
     linkText: "Help",
   },
+  {
+    id: 8,
+    url: "/",
+    linkText: "Home",
+  },
 ];
 
 export default function SmLayout({ children }) {
@@ -61,8 +68,7 @@ export default function SmLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen bg-gray-600">
         <div id="page">
-          <BrandStrip />
-          <NavBar navLinks={navLinks} />
+          <NavBar navLinks={navLinks} productType={productType} />
           {children}
         </div>
       </body>

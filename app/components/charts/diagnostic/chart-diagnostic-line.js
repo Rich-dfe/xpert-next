@@ -74,7 +74,7 @@ const ChartDiagnosticLine = ({chartData, chartTitle}) => {
     },
     series: [
       {
-        name: "Water Level",
+        name: chartTitle,
         data: chartData,
       },
     ],

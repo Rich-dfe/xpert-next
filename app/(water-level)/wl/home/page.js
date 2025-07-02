@@ -12,7 +12,7 @@ export default function WlHome() {
   return (
     <>
       <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="min-h-[500px]"><SelectLoggersForm loggers={API_LOGGERS} /></div>
         <div className="min-h-[500px]"><MapBox /></div>
         <div className="min-h-[500px]"><LoggerConfigForm /></div>

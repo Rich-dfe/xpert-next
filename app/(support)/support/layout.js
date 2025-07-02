@@ -18,44 +18,9 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
-const productType = "Depth/Temperature";
+const productType="Technical Support";
 
 const navLinks = [
-  {
-    id: 1,
-    url: "/dt/home",
-    linkText: "Loggers",
-  },
-  {
-    id: 2,
-    url: "/dt/charts",
-    linkText: "charts",
-  },
-  {
-    id: 3,
-    url: "/dt/config",
-    linkText: "Configuration",
-  },
-  {
-    id: 4,
-    url: "/dt/calibration",
-    linkText: "Calibration",
-  },
-  {
-    id: 5,
-    url: "/dt/reports",
-    linkText: "Reports",
-  },
-  {
-    id: 6,
-    url: "/dt/licenses",
-    linkText: "Licenses",
-  },
-  {
-    id: 7,
-    url: "/dt/help",
-    linkText: "Help",
-  },
   {
     id: 8,
     url: "/",
@@ -63,12 +28,12 @@ const navLinks = [
   },
 ];
 
-export default function DtLayout({ children }) {
+export default function SupportLayout({ children }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-gray-600">
         <div id="page">
-          <NavBar navLinks={navLinks} productType={productType}/>
+          <NavBar navLinks={navLinks} productType={productType} />
           {children}
         </div>
       </body>

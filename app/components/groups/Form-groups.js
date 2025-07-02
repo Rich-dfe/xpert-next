@@ -52,7 +52,7 @@ function GroupsForm(props) {
 
           <div className="flex items-center justify-center mb-4">
             <button
-              className="bg-green-400 hover:bg-green-700 text-gray-700 hover:text-gray-300 font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-green-400 hover:bg-green-700 text-gray-700 hover:text-gray-300 font-semibold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Move
@@ -81,7 +81,7 @@ function GroupsForm(props) {
 
           <div className="flex items-center justify-center mb-4">
             <button
-              className="bg-green-400 hover:bg-green-700 text-gray-700 hover:text-gray-300 font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-green-400 hover:bg-green-700 text-gray-700 hover:text-gray-300 font-semibold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Create
@@ -110,7 +110,7 @@ function GroupsForm(props) {
 
           <div className="flex items-center justify-center mb-4">
             <button
-              className="bg-green-400 hover:bg-green-700 text-gray-700 hover:text-gray-300 font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-green-400 hover:bg-green-700 text-gray-700 hover:text-gray-300 font-semibold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Delete

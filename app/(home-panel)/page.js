@@ -61,9 +61,20 @@ export default function Home() {
             link="http://www.odysseydatarecording.com/"
           />
         </div>
-      </div>
-      <div>
-        <Button link="/par/" text="PAR Page" />
+        <div className="mt-8 mb-8 ml-4 mr-4">
+          <HomeCard
+            product="Licenses"
+            text="Stock up on some new loggers and check out any latest offers ."
+            link="/licenses/licenses"
+          />
+        </div>
+        <div className="mt-8 mb-8 ml-4 mr-4">
+          <HomeCard
+            product="Technical Support"
+            text="Stock up on some new loggers and check out any latest offers ."
+            link="/support/help"
+          />
+        </div>
       </div>
     </>
   );

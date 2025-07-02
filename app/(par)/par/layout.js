@@ -18,6 +18,8 @@ export const metadata = {
   description: "Dataflow Xpert System",
 };
 
+const productType = "PAR";
+
 const navLinks = [
   {
     id: 1,
@@ -45,14 +47,9 @@ const navLinks = [
     linkText: "Reports",
   },
   {
-    id: 6,
-    url: "/par/licenses",
-    linkText: "Licenses",
-  },
-  {
-    id: 7,
-    url: "/par/help",
-    linkText: "Help",
+    id: 8,
+    url: "/",
+    linkText: "Home",
   },
 ];
 
@@ -61,8 +58,7 @@ export default function ParLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen bg-gray-600">
         <div id="page">
-          <BrandStrip />
-          <NavBar navLinks={navLinks} />
+          <NavBar navLinks={navLinks} productType={productType} />
           {children}
         </div>
       </body>

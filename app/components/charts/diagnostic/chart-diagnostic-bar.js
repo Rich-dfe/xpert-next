@@ -66,7 +66,7 @@ const ChartDiagnosticBar = ({chartData,chartTitle}) => {
       },
       series: [
         {
-          name: "series-1",
+          name: chartTitle,
           data: chartData,
         }
       ]
