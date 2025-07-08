@@ -3,11 +3,11 @@ import dynamic from "next/dynamic";
 import ChartCard from "../chart-card";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const DualAxisChart = ({chartData}) => {
+const DualAxisChart = ({chartData, title, primaryAxisText, secondaryAxisText}) => {
   const [chartOptions, setChartOptions] = useState({
     options: {
       chart: {
-        id: "basic-bar",
+        id: "dual-axis-line",
       },
       dataLabels: {
         enabled: false,
@@ -29,7 +29,7 @@ const DualAxisChart = ({chartData}) => {
         },
       },
       title: {
-        text: "Water Level & Temperature - 16-06-2025",
+        text: title,
         align: "center",
         margin: 10,
         offsetX: 0,
@@ -65,7 +65,7 @@ const DualAxisChart = ({chartData}) => {
             },
           },
           title: {
-            text: "Water Level (mm)",
+            text: primaryAxisText,
             style: {
               color: "#247BA0",
               fontSize: "18px",
@@ -76,7 +76,7 @@ const DualAxisChart = ({chartData}) => {
           },
         },
         {
-          seriesName: "Temperature",
+          seriesName: secondaryAxisText,
           opposite: true,
           axisTicks: {
             show: true,
@@ -126,7 +126,7 @@ const DualAxisChart = ({chartData}) => {
             series={chartOptions.series}
             height="700"
             width="100%"
-            charttype="Line"
+            charttype="line"
           />
         </ChartCard>
       </div>

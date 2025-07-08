@@ -29,12 +29,7 @@ const navLinks = [
   {
     id: 2,
     url: "/par/charts",
-    linkText: "charts",
-  },
-  {
-    id: 3,
-    url: "/par/config",
-    linkText: "Configuration",
+    linkText: "Charts",
   },
   {
     id: 4,

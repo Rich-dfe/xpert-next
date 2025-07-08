@@ -28,7 +28,10 @@ export default function WlCharts() {
       [1487116800000, 32],
     ],
   ]);
-  
+
+  const chartTitle = "Water Level & Temperature";
+  const primaryAxisText = "Water Level (mm)";
+  const secondaryAxisText = "Temperature";
 
   const handleDates = () => {
     console.log("Start Date = ", startDate.getTime());
@@ -61,7 +64,16 @@ export default function WlCharts() {
         currentChartType={chartType}
         onChangeChartType={updateChartType}
       />
-      {displayChartType == 0 ? <DualAxisChart chartData={chartData}/> : <ChartDiagnosticAll />}
+      {displayChartType == 0 ? (
+        <DualAxisChart
+          chartData={chartData}
+          title={chartTitle}
+          primaryAxisText={primaryAxisText}
+          secondaryAxisText={secondaryAxisText}
+        />
+      ) : (
+        <ChartDiagnosticAll />
+      )}
     </>
   );
 }

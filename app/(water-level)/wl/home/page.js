@@ -1,14 +1,34 @@
+"use client"
+
 import LoggerConfigForm from "@/app/components/config/Form-logger-config";
 import SelectLoggersForm from "@/app/components/loggers/Select-loggers";
 import MapBox from "@/app/components/loggers/Map-box";
+import loggersService from "@/app/service/loggersService";
+import { useLoggers } from "@/app/store/user-loggers-context";
 
-const API_LOGGERS = [
-    { value: '1', label: 'Water Level 1' },
-    { value: '2', label: 'Water Level 2' },
-    { value: '3', label: 'Water Level 3' },
-  ];
+
+// const loggerTypeId = 7;
+
+// async function getLoggers(){
+//   try{
+//     const apiLoggers = loggersService.fetchLoggersByTypeByUserId(32,loggerTypeId)
+//     return apiLoggers;
+//   } catch(e){
+//     console.log('Fetching error', e)
+//     throw new Error('Failed to fetch loggers from API');
+//   }
+// }
 
 export default function WlHome() {
+
+  const {
+    waterLevelLoggers,
+  } = useLoggers();
+
+  const API_LOGGERS = waterLevelLoggers;
+
+//   const API_LOGGERS = await getLoggers();
+//  console.log("WL LOGGERS", API_LOGGERS);
   return (
     <>
       <div className="container mx-auto p-4">

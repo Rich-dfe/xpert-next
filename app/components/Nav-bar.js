@@ -28,7 +28,7 @@ const NavBar = (props) => {
   return (
     <>
       <div className="flex pl-4 sm:justify-center bg-gray-800 pd items-center gap-1">
-        <Image className="h-8 w-auto" src={logoImg} alt="Your Company" />
+        <Image className="h-8 w-auto" src={logoImg} alt="Dataflow Systems" />
         <div className=" flex flex-col mr-auto sm:mx-0 text-3xl p-2 text-gray-300">
           Dataflow Xpert
           <div className="text-xs pl-1">{props.productType}</div>

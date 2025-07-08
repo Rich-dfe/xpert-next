@@ -1,7 +1,17 @@
+import ParCalibrationForm from "@/app/components/par/Calibration-form"
+
 export default function ParCal(){
     return (
         <>
-        <h2>This is the PAR calibration page</h2>
-        </>
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-1 xl:grid-cols-3">
+          <div></div>
+          <div>
+            <ParCalibrationForm />
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </>
     )
 }

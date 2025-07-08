@@ -13,8 +13,8 @@ function SelectLoggersForm(props) {
             <option value="">Select an option</option>
             {props.loggers.map((logger) => {
               return (
-                <option key={logger.value} value={logger.value}>
-                  {logger.label}
+                <option key={logger.id} value={logger.id}>
+                  {logger.logger_name}
                 </option>
               );
             })}

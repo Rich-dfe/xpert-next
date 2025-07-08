@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import BrandStrip from "../components/Brand-strip";
 import "./globals.css";
+import { LoggersProvider } from "../store/user-loggers-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="min-h-screen bg-gray-300">
         <BrandStrip />
+        <LoggersProvider>
         {children}
+        </LoggersProvider>
       </body>
     </html>
   );
