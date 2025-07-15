@@ -1,4 +1,6 @@
 import api from "./axiosInstance";
+import { formatDiagnotsicData } from "@/app/utils.js/formatters/formatDiagnosticData";
+import { unixTimestampToHuman } from "../utils.js/formatters/formatDate";
 
 const loggersService = {
 
@@ -45,6 +47,41 @@ const loggersService = {
       //await signOut();
     }
   },
+
+  fetchGeneralLoggerInfo: async (loggerId) => {
+    try {
+      const response = await api.get("/logger",
+        {
+          params: {
+            loggerId: loggerId,
+          },
+        }
+      );
+      console.log('SERVICE RESPONSE', response);
+      return response.data;
+    } catch (error) {
+      throw new Error('Could not fetch logger info - service 63')
+    }
+  },
+
+  fetchLatestDiagnosticData: async(uid) => {
+    try {
+      const response = await api.get("/dynamodb/diagnostic", {
+        params: { uidDecimal: uid },
+      });
+      console.log('1 ', response.data[0]);
+      // console.log('2 ',response.data[0].logDateTime);
+      // console.log('3 ',unixTimestampToHuman(response.data[0].logDateTime));
+      response.data[0].formattedLogDateTime = unixTimestampToHuman(response.data[0].logDateTime);
+      const formattedDxData = formatDiagnotsicData(response.data[0].diagnostics);
+      response.data[0].diagnostics = formattedDxData;
+      return response.data;
+    } catch (error) {
+      console.log("Server response error", error);
+      //alert('fetchLoggersByUserId: '+error);
+      //await signOut();
+    }
+  }
 };
 
 export default loggersService;

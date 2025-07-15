@@ -4,14 +4,14 @@ import InfoCard from "../Info-card";
 import Image from "next/image";
 import MapImg from "@/public/google-map.png";
 
-function MapBox(){
+function MapBox({lat, lng}){
     return(
     <>
     <FormCard>
     <FormStrip text="Location" />
         <Image className="h-100" src={MapImg} alt="Your Company" />
         <div className="flex justify-end text-blue-100 mt-3">
-            172.344° 43.567°
+            {lat}° {lng}°
         </div>
     </FormCard>
     </>

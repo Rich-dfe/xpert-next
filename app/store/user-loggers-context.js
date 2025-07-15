@@ -3,7 +3,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import loggersService from "@/app/service/loggersService";
 
-export const UserLoggersContext = createContext(null);
+export const UserLoggersContext = createContext({item:[]});
 
 //The provider component
 export const LoggersProvider = ({ children }) => {
@@ -19,6 +19,8 @@ export const LoggersProvider = ({ children }) => {
   const [xtreemConductivityLoggers, setXtreemConductivityLoggers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedLogger, setSelectedLogger] = useState([{"model":"", "lat":12, "lng":23}]);
+  const [isSelectedLogger, setIsSelectedLogger] = useState(false);
 
   useEffect(() => {
     const fetchLoggers = async () => {
@@ -100,6 +102,10 @@ export const LoggersProvider = ({ children }) => {
         xtreemConductivityLoggers,
         isLoading,
         error,
+        selectedLogger,
+        setSelectedLogger,
+        isSelectedLogger,
+        setIsSelectedLogger,
       }}
     >
       {children}
