@@ -3,15 +3,18 @@ import FormStrip from "../Form-strip";
 import InfoCard from "../Info-card";
 import Image from "next/image";
 import MapImg from "@/public/google-map.png";
+import { useMemo } from "react";
+import Map from "../map";
 
-function MapBox({lat, lng}){
+function MapBox({coords,id, logger_name}){
     return(
     <>
     <FormCard>
     <FormStrip text="Location" />
-        <Image className="h-100" src={MapImg} alt="Your Company" />
+    <Map coords={coords} id={id} logger_name={logger_name}/>
+        {/* <Image className="h-100" src={MapImg} alt="Your Company" /> */}
         <div className="flex justify-end text-blue-100 mt-3">
-            {lat}° {lng}°
+            {coords[0]}° {coords[1]}°
         </div>
     </FormCard>
     </>

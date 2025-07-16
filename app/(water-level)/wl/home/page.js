@@ -68,7 +68,7 @@ export default function WlHome() {
             />
           </div>
           <div className="min-h-[500px]">
-            <MapBox lat={selectedLogger[0].lat} lng={selectedLogger[0].lng}/>
+            <MapBox coords={[selectedLogger[0].lat, selectedLogger[0].lng]} id={selectedLogger[0].id} logger_name={selectedLogger[0].logger_name}/>
           </div>
           <div className="min-h-[500px]">
             <LoggerConfigForm />

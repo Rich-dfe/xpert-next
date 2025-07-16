@@ -19,7 +19,7 @@ export const LoggersProvider = ({ children }) => {
   const [xtreemConductivityLoggers, setXtreemConductivityLoggers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedLogger, setSelectedLogger] = useState([{"model":"", "lat":12, "lng":23}]);
+  const [selectedLogger, setSelectedLogger] = useState([{"model":"", "lat":-43.5950, "lng":170.1418}]);
   const [isSelectedLogger, setIsSelectedLogger] = useState(false);
 
   useEffect(() => {
