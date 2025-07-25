@@ -2,6 +2,7 @@
 
 import HomeCard from "../components/Home-card";
 import { useLoggers } from "../store/user-loggers-context";
+import Spinner from "../components/spinner";
 
 export default function Home() {
 
@@ -32,6 +33,7 @@ export default function Home() {
 
   return (
     <>
+    {(isLoading) ? <Spinner /> : null}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 bg-gray-300">
         <div className="mt-8 mb-8 ml-4 mr-4">
           <HomeCard

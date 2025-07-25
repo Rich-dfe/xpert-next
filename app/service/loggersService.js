@@ -57,7 +57,7 @@ const loggersService = {
           },
         }
       );
-      console.log('SERVICE RESPONSE', response);
+      console.log('SERVICE LOGGER DATA 🆗', response);
       return response.data;
     } catch (error) {
       throw new Error('Could not fetch logger info - service 63')
@@ -69,7 +69,7 @@ const loggersService = {
       const response = await api.get("/dynamodb/diagnostic", {
         params: { uidDecimal: uid },
       });
-      console.log('1 ', response.data[0]);
+      //console.log('SERVICE DIAGNOSTIC DATA 👍', response.data[0]);
       // console.log('2 ',response.data[0].logDateTime);
       // console.log('3 ',unixTimestampToHuman(response.data[0].logDateTime));
       response.data[0].formattedLogDateTime = unixTimestampToHuman(response.data[0].logDateTime);
@@ -80,6 +80,17 @@ const loggersService = {
       console.log("Server response error", error);
       //alert('fetchLoggersByUserId: '+error);
       //await signOut();
+    }
+  },
+
+  fetchUserCalibrationData: async(logger_id,logger_type)=>{
+    try{
+        const response = await api.get("/settings/user/cal", {
+        params: { lid: logger_id, type: logger_type },
+      });
+      return response.data
+    }catch(error){
+      throw new Error('Could not fetch user calibration data - service 93', error)
     }
   }
 };

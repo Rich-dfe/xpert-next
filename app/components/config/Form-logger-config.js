@@ -1,12 +1,125 @@
 import FormCard from "../Form-card";
 import FormStrip from "@/app/components/Form-strip";
+import { useState, useEffect } from "react";
+import {
+  isNotEmpty,
+  hasMinLength,
+  isLessThanOrEqual,
+} from "@/app/utils.js/validation";
+import { intervalToSeconds, secondsToHoursMinsSecs } from "@/app/utils.js/helpers";
+import { XMarkIcon, CheckIcon, Bars3Icon } from "@heroicons/react/24/solid";
 
-function LoggerConfigForm() {
+function LoggerConfigForm({ onSubmit, initialData }) {
+  //console.log('INITAL DATA',initialData);
+  const [loggerName, setLoggerName] = useState('');
+  const [loggingIntervalHour, setLoggingIntervalHour] = useState("01");
+  const [loggingIntervalMin, setLoggingIntervalMin] = useState("0");
+  const [loggingIntervalSec, setLoggingIntervalSec] = useState("0");
+  const [totalLoggingIntervalSeconds, setTotalLoggingIntervalSeconds] = useState(3600);
+  const [timezone, setTimezone] = useState("0");
+  const [notes,setNotes] = useState('');
+  const [applyToGroup, setApplyToGroup] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [loggerNameIsInvalid, setLoggerNameIsInvalid] = useState(false);
+  const [intervalIsInvalid, setIntervalIsInvalid] = useState(false);
+
+  useEffect(() => {
+    setLoggerName(initialData.logger_name || '');
+    setTimezone(initialData.timezone_offset || '');
+    initialData.notes ? setNotes(initialData.notes) : setNotes('');
+    setGroupName(initialData.group_name || '');
+    const initialLoggingInterval = secondsToHoursMinsSecs(initialData.x0018);
+    setLoggingIntervalHour(initialLoggingInterval.hrs);
+    setLoggingIntervalMin(initialLoggingInterval.mins);
+    setLoggingIntervalSec(initialLoggingInterval.secs);
+  }, [initialData]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "loggerName") {
+      setLoggerName(value);
+    } else if (name === "intervalHour") {
+      setLoggingIntervalHour(value);
+    } else if (name === "intervalMin") {
+      setLoggingIntervalMin(value);
+    } else if (name === "intervalSec") {
+      setLoggingIntervalSec(value);
+    } else if (name === "timezone") {
+      setTimezone(value);
+    } else if (name === "notes") {
+      setNotes(value);
+    } else if (name === "groupToggle") {
+      setApplyToGroup(!applyToGroup);
+      console.log('HELLO TOGGLE 👍',applyToGroup);
+      //const updatedData = {...formData, group_apply:applyToGroup};
+      //setFormData(updatedData);
+    }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault(); // Prevent default browser form submission
+
+    if (!hasMinLength(loggerName, 3)) {
+      setLoggerNameIsInvalid(true);
+      return;
+    } else {
+      setLoggerNameIsInvalid(false);
+    }
+
+    if (isLessThanOrEqual(totalLoggingIntervalSeconds, 0)) {
+      setIntervalIsInvalid(true);
+      return;
+    } else {
+      setIntervalIsInvalid(false);
+    }
+
+    onSubmit({
+      loggerName,
+      loggingIntervalHour,
+      loggingIntervalMin,
+      loggingIntervalSec,
+      timezone,
+      notes,
+      applyToGroup,
+      totalLoggingIntervalSeconds,
+    }); // Call the function passed from the parent
+    //setNotes(''); // Clear form fields
+    //setEmail('');
+  };
+
+  // Function to generate options (e.g., 00, 01, ..., 23)
+  const generateOptions = (lowerLimit, upperLimit, stepSize) => {
+    const options = [];
+    for (let i = lowerLimit; i <= upperLimit ; i+=stepSize) {
+      const value = String(i).padStart(2, "0");
+      options.push(
+        <option key={value} value={value}>
+          {value}
+        </option>
+      );
+    }
+    return options;
+  };
+
+  // useEffect(() =>{
+  //   setApplyToGroup(!applyToGroup);
+  // },[applyToGroup])
+
+  useEffect(() => {
+    const intervalSeconds = intervalToSeconds(
+      loggingIntervalHour,
+      loggingIntervalMin,
+      loggingIntervalSec
+    );
+    setTotalLoggingIntervalSeconds(intervalSeconds);
+  }, [loggingIntervalHour, loggingIntervalMin, loggingIntervalSec]);
+
   return (
     <>
       <FormCard>
         <FormStrip text="Logger Configuration" />
-        <form className="w-full max-w-lg mx-auto">
+        <form className="w-full max-w-lg mx-auto" onSubmit={handleFormSubmit}>
           <div className="flex flex-wrap -mx-3 mb-4">
             <div className="w-full px-3">
               <label
@@ -21,7 +134,12 @@ function LoggerConfigForm() {
                 name="loggerName"
                 type="text"
                 placeholder="Logger Name"
+                value={loggerName}
+                onChange={handleInputChange}
               />
+              <div className="text-red-600">
+                {loggerNameIsInvalid && <p>Invalid logger name!</p>}
+              </div>
             </div>
           </div>
 
@@ -33,12 +151,56 @@ function LoggerConfigForm() {
               >
                 Logging Interval
               </label>
-              <input
-                className="appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400"
-                id="grid-first-name"
-                type="text"
-                placeholder="HH:MM:SS"
-              />
+             
+              <div className="flex items-center">
+                {/* <span className="appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400"> */}
+                {/* Hours Select */}
+                <div className="flex flex-col items-center">
+                  <select
+                    name="intervalHour"
+                    id="intervalHour"
+                    value={loggingIntervalHour}
+                    onChange={handleInputChange}
+                    selected={loggingIntervalHour}
+                    className="w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none transition focus:ring-green-400 focus:border-green-400 text-md font-medium bg-gray-700 text-gray-300"
+                  >
+                    {generateOptions(0,23,1)}
+                  </select>
+                </div>
+
+                <span className="mx-1 text-gray-200">:</span>
+                <div className="flex flex-col items-center">
+                  <select
+                    name="intervalMin"
+                    id="intervalMin"
+                    value={loggingIntervalMin}
+                    onChange={handleInputChange}
+                    selected={loggingIntervalMin}
+                    className="w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none focus:ring-green-400 focus:border-green-400 transition text-md font-medium bg-gray-700 text-gray-300"
+                  >
+                    {generateOptions(0,59,1)}
+                  </select>
+                </div>
+                
+                <span className="mx-1 text-gray-200">:</span>
+
+                <div className="flex flex-col items-center">
+                  <select
+                    name="intervalSec"
+                    id="intervalSec"
+                    value={loggingIntervalSec}
+                    onChange={handleInputChange}
+                    selected={loggingIntervalSec}
+                    className="w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none focus:ring-green-400 focus:border-green-400 transition text-md font-medium bg-gray-700 text-gray-300"
+                  >
+                    {generateOptions(0,59,10)}
+                  </select>
+                </div>
+               
+              </div>
+              <div className="text-red-600">
+                {intervalIsInvalid && <p>Must be greater than 0!</p>}
+              </div>
             </div>
 
             <div className="w-full md:w-1/2 px-3">
@@ -49,51 +211,54 @@ function LoggerConfigForm() {
                 Timezone
               </label>
               <select
-                className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm"
-                id="grid-last-name"
+                className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 transition sm:text-sm text-gray-300 rounded-md shadow-sm"
+                id="timezone"
+                name="timezone"
                 type="text"
-                placeholder="e.g., Doe"
+                placeholder="Timezone"
+                value={timezone}
+                onChange={handleInputChange}
               >
-                <option value="-12:00">GMT -12:00</option>
-                <option value="-11:00">GMT -11:00</option>
-                <option value="-10:00">GMT -10:00</option>
-                <option value="-09:50">GMT -9:30</option>
-                <option value="-09:00">GMT -9:00</option>
-                <option value="-08:00">GMT -8:00</option>
-                <option value="-07:00">GMT -7:00</option>
-                <option value="-06:00">GMT -6:00</option>
-                <option value="-05:00">GMT -5:00</option>
-                <option value="-04:50">GMT -4:30</option>
-                <option value="-04:00">GMT -4:00</option>
-                <option value="-03:50">GMT -3:30</option>
-                <option value="-03:00">GMT -3:00</option>
-                <option value="-02:00">GMT -2:00</option>
-                <option value="-01:00">GMT -1:00</option>
-                <option value="+00:00">GMT 0:00</option>
-                <option value="+01:00">GMT +1:00</option>
-                <option value="+02:00">GMT +2:00</option>
-                <option value="+03:00">GMT +3:00</option>
-                <option value="+03:50">GMT +3:30</option>
-                <option value="+04:00">GMT +4:00</option>
-                <option value="+04:50">GMT +4:30</option>
-                <option value="+05:00">GMT +5:00</option>
-                <option value="+05:50">GMT +5:30</option>
-                <option value="+05:75">GMT +5:45</option>
-                <option value="+06:00">GMT +6:00</option>
-                <option value="+06:50">GMT +6:30</option>
-                <option value="+07:00">GMT +7:00</option>
-                <option value="+08:00">GMT +8:00</option>
-                <option value="+08:75">GMT +8:45</option>
-                <option value="+09:00">GMT +9:00</option>
-                <option value="+09:50">GMT +9:30</option>
-                <option value="+10:00">GMT +10:00</option>
-                <option value="+10:50">GMT +10:30</option>
-                <option value="+11:00">GMT +11:00</option>
-                <option value="+11:50">GMT +11:30</option>
-                <option value="+12:00">GMT +12:00</option>
-                <option value="+12:75">GMT +12:45</option>
-                <option value="+13:00">GMT +13:00</option>
-                <option value="+14:00">GMT +14:00</option>
+                <option value="-12.00">GMT -12:00</option>
+                <option value="-11.00">GMT -11:00</option>
+                <option value="-10.00">GMT -10:00</option>
+                <option value="-9.30">GMT -9:30</option>
+                <option value="-9.00">GMT -9:00</option>
+                <option value="-8.00">GMT -8:00</option>
+                <option value="-7.00">GMT -7:00</option>
+                <option value="-6.00">GMT -6:00</option>
+                <option value="-5.00">GMT -5:00</option>
+                <option value="-4.30">GMT -4:30</option>
+                <option value="-4.00">GMT -4:00</option>
+                <option value="-3.30">GMT -3:30</option>
+                <option value="-3.00">GMT -3:00</option>
+                <option value="-2.00">GMT -2:00</option>
+                <option value="-1.00">GMT -1:00</option>
+                <option value="0.00">GMT 0:00</option>
+                <option value="1.00">GMT +1:00</option>
+                <option value="2.00">GMT +2:00</option>
+                <option value="3.00">GMT +3:00</option>
+                <option value="3.30">GMT +3:30</option>
+                <option value="4.00">GMT +4:00</option>
+                <option value="4.30">GMT +4:30</option>
+                <option value="5.00">GMT +5:00</option>
+                <option value="5.30">GMT +5:30</option>
+                <option value="5.45">GMT +5:45</option>
+                <option value="6.00">GMT +6:00</option>
+                <option value="6.30">GMT +6:30</option>
+                <option value="7.00">GMT +7:00</option>
+                <option value="8.00">GMT +8:00</option>
+                <option value="8.45">GMT +8:45</option>
+                <option value="9.00">GMT +9:00</option>
+                <option value="9.30">GMT +9:30</option>
+                <option value="10.00">GMT +10:00</option>
+                <option value="10.30">GMT +10:30</option>
+                <option value="11.00">GMT +11:00</option>
+                <option value="11.30">GMT +11:30</option>
+                <option value="12.00">GMT +12:00</option>
+                <option value="12.45">GMT +12:45</option>
+                <option value="13.00">GMT +13:00</option>
+                <option value="14.00">GMT +14:00</option>
               </select>
             </div>
           </div>
@@ -109,9 +274,11 @@ function LoggerConfigForm() {
               <textarea
                 rows="4"
                 className="appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400"
-                id="grid-email"
+                id="notes"
+                name="notes"
                 type="email"
-                placeholder="e.g., john.doe@example.com"
+                value={notes}
+                onChange={handleInputChange}
               />
             </div>
           </div>
@@ -129,42 +296,31 @@ function LoggerConfigForm() {
                 id="group"
                 name="group"
                 type="text"
-                placeholder="Group"
+                value={groupName}
+                disabled
               />
             </div>
           </div>
 
-          <div className="block text-gray-300 text-sm font-medium mb-1 mt-3">
+          {/* APPLY TO GROUP SWITCH */}
+          <div className="block text-gray-300 text-sm font-medium mb-2 mt-3">
             Apply to group?
           </div>
-          <div className="flex flex-row mb-3">
-            <label
-              htmlFor="html"
-              className="block text-gray-300 text-sm font-medium mb-1 mr-2"
-            >
-              Yes
-            </label>
+          <label className="inline-flex items-center cursor-pointer">
             <input
-              type="radio"
-              className="mr-4"
-              id="applyGroup"
-              name="applyGroup"
+              type="checkbox"
               value="1"
+              className="sr-only peer"
+              onChange={handleInputChange}
+              name="groupToggle"
+              id="groupToggle"
+              checked={applyToGroup}
             />
-            <label
-              htmlFor="css"
-              className="block text-gray-300 text-sm font-medium mb-1 mr-2"
-            >
-              No
-            </label>
-             
-            <input
-              type="radio"
-              id="applyGroup"
-              name="applyGroup"
-              value="0"
-            />
-          </div>
+            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-300 dark:peer-checked:bg-blue-500"></div>
+            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              {applyToGroup ? <CheckIcon className="size-6 text-green-300"/> : <XMarkIcon className="size-6 text-red-400"/>}
+            </span>
+          </label>
 
           <div className="flex items-center justify-center">
             <button

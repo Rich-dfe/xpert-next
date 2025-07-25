@@ -2,13 +2,22 @@ import FormCard from "../Form-card";
 import InfoCard from "../Info-card";
 import FormStrip from "../Form-strip";
 import { decimalToHex } from "@/app/utils.js/formatters/formatSerialNumber";
+import { useState } from "react";
+import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
+import Spinner from "../spinner";
 
 
-function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model}) {
-  console.log('SELECT LOGGERS DX DATA', latestDiagnosticData);
+function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model, isSelectedLogger, selectedLogger, isLoading}) {
+  const [firmwareUpdate, setFirmwareUpdate] = useState(false);
 
-  const handleChange = (event)=>{
-    onSelectChange(event.target.value);
+  const handleChange = (e)=>{
+    const { name, value } = e.target;
+
+    if(name === "loggerSelect"){
+      onSelectChange(value);
+    }else if(name === "firmwareUpdateToggle"){
+      setFirmwareUpdate(!firmwareUpdate);
+    } 
   }
 
   const noDataPlaceHolder = "-----";
@@ -16,10 +25,11 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
   return (
     <>
       <FormCard>
+        {(isLoading) ? <Spinner /> : null}
         <FormStrip text="My Loggers" />
         <div>
-          <select onChange={handleChange} className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm">
-            <option value="">Select an option</option>
+          <select name="loggerSelect" onChange={handleChange} value={selectedLogger[0].id} className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm">
+            <option>Select an option</option>
             {loggers.map((logger) => {
               return (
                 <option key={logger.id} value={logger.id}>
@@ -54,7 +64,7 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
                 <td>{(latestDiagnosticData.diagnostics[0].batteryVoltage === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].batteryVoltage}</td>
               </tr>
               <tr>
-                <td>Remaing Days</td>
+                <td>Days Remaing</td>
                 <td>{(latestDiagnosticData.diagnostics[0].daysRemaining === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].daysRemaining}</td>
               </tr>
               <tr>
@@ -83,29 +93,21 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
         <div className="block text-gray-300 text-sm font-medium mb-1 mt-3">
           Firmware auto update?
         </div>
-        <div className="flex flex-row mb-3">
-          <label
-            htmlFor="html"
-            className="block text-gray-300 text-sm font-medium mb-1 mr-2"
-          >
-            Yes
+        {/* APPLY TO GROUP SWITCH */}
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              value="1"
+              className="sr-only peer"
+              onChange={handleChange}
+              name="firmwareUpdateToggle"
+              // checked={applyToGroup}
+            />
+            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-300 dark:peer-checked:bg-blue-500"></div>
+            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              {firmwareUpdate ? <CheckIcon className="size-6 text-green-300"/> : <XMarkIcon className="size-6 text-red-400"/>}
+            </span>
           </label>
-          <input
-            type="radio"
-            className="mr-4"
-            id="applyGroup"
-            name="applyGroup"
-            value="1"
-          />
-          <label
-            htmlFor="css"
-            className="block text-gray-300 text-sm font-medium mb-1 mr-2"
-          >
-            No
-          </label>
-           
-          <input type="radio" id="applyGroup" name="applyGroup" value="0" />
-        </div>
       </FormCard>
     </>
   );

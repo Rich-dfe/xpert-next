@@ -1,0 +1,14 @@
+{
+  "waterLevel": {
+    "pageTitle": "Water Level Calibration",
+    "mainContent": "<div>  <ul>\n    <li><strong>Ref Value #1 & 2: </strong>The depths in 'mm' manually marked on the sensor cable as reference points.</li>\n    <li><strong>Logger Reading #1 & 2: </strong>The value shown on the view tab of the Xtract app when the sensor is submerged to each ref value depth.</li>\n <li><strong>Temperature: </strong>The temperature value shown on the view tab of the Xtract app during calibration.</li>\n  <li><strong>Sensor Length: </strong>The specified length of the the sensor cable (not including the logger) as shown on the label.\n<strong>IMPORTANT!</strong><i> Changing the sensor length requires a re-calibration of the logger.</i></li>\n </ul>\n</div>",
+    "footerNote": "<p><em>Copyright &copy; 2025. All rights reserved.</em></p>",
+    "buttonText": "Help"
+  },
+  "par": {
+    "pageTitle": "Water Level Calibration",
+    "mainContent": "<div>\n  <h1>Welcome!</h1>\n<p>This is some <strong>HTML content</strong> loaded from a JSON file.</p>\n  <ul>\n    <li>Item A</li>\n    <li>Item B</li>\n  </ul>\n</div>",
+    "footerNote": "<p><em>Copyright &copy; 2025. All rights reserved.</em></p>",
+    "buttonText": "Help"
+  }
+}

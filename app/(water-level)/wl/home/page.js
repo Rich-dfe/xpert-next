@@ -5,7 +5,6 @@ import SelectLoggersForm from "@/app/components/loggers/Select-loggers";
 import MapBox from "@/app/components/loggers/Map-box";
 import { useLoggers } from "@/app/store/user-loggers-context";
 import loggersService from "@/app/service/loggersService";
-import { unixTimestampToHuman } from "@/app/utils.js/formatters/formatDate";
 
 export default function WlHome() {
   const [latestDiagnosticData, setLatestDiagnosticData] = useState({
@@ -25,7 +24,7 @@ export default function WlHome() {
     formattedLogDateTime:null,
     logDateTime: null,
   });
-
+  
   //Get the loggers context
   const { waterLevelLoggers, selectedLogger, setSelectedLogger, isSelectedLogger, setIsSelectedLogger } = useLoggers();
 
@@ -33,17 +32,21 @@ export default function WlHome() {
  
   const handleSelectedLogger = async (selectLoggerId) => {
     const selectedLoggerData = await loggersService.fetchGeneralLoggerInfo(selectLoggerId);
-    console.log('1 SERVICE DATA ON PAGE.JS',selectedLoggerData);
+    //console.log('1 SERVICE DATA ON PAGE.JS',selectedLoggerData);
     //Set the context data
     setSelectedLogger(selectedLoggerData);
     setIsSelectedLogger(true);
   };
 
+  const handleLoggerConfigForm = (configFormData) =>{
+    console.log('HANDLING CONFIG FORM', configFormData);
+  }
+
     useEffect(() => {
       async function diagnosticData(){
         try{
           const dxData = await loggersService.fetchLatestDiagnosticData(selectedLogger[0].logger_uid);
-          console.log('3. DX Data', dxData);
+          //console.log('3. DX Data', dxData);
           setLatestDiagnosticData(dxData[0]);
         }catch(error){
           console.log(error);
@@ -65,13 +68,15 @@ export default function WlHome() {
               onSelectChange={handleSelectedLogger}
               latestDiagnosticData={latestDiagnosticData}
               model={selectedLogger[0].model}
+              isSelectedLogger={isSelectedLogger}
+              selectedLogger={selectedLogger}
             />
           </div>
           <div className="min-h-[500px]">
             <MapBox coords={[selectedLogger[0].lat, selectedLogger[0].lng]} id={selectedLogger[0].id} logger_name={selectedLogger[0].logger_name}/>
           </div>
           <div className="min-h-[500px]">
-            <LoggerConfigForm />
+            <LoggerConfigForm onSubmit={handleLoggerConfigForm} initialData={selectedLogger[0]}/>
           </div>
         </div>
       </div>
