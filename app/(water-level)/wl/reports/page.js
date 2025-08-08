@@ -1,61 +1,74 @@
-'use client'
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReportForm from "@/app/components/reports/reports-form";
 import ReportsList from "@/app/components/reports/reports-list";
-import { handleChildAction } from "@/app/service/reports/get-reports";
-import { loggerTypeItems } from "@/app/config/select-menu-items.js";
-
-const API_LOGGERS = loggerTypeItems();
-
-const API_LOGGER_NAMES = [
-    { value: '1', label: 'Water Level - 1234' },
-    { value: '2', label: 'Water Level - 4567' },
-    { value: '3', label: 'Water Level - 5678' },
-  ];
-
-const API_REPORTS = [
-    { id: '1', loggerName: 'Water Level - 1234', rangeStart: "23-06-25", rangeEnd:"23-06-25" },
-    { id: '2', loggerName: 'Water Level - 4567', rangeStart: "23-06-25", rangeEnd:"23-06-25" },
-    { id: '3', loggerName: 'Water Level - 5678', rangeStart: "23-06-25", rangeEnd:"23-06-25" },
-]
+import { useLoggers } from "@/app/store/user-loggers-context";
+import reportsService from "@/app/service/reportsService";
+import Spinner from "@/app/components/spinner";
 
 export default function WlReports() {
+  //Get the loggers context
+  const { waterLevelLoggers } = useLoggers();
 
-    const [parentMessage, setParentMessage] = useState('Parent initial message');
+  const API_LOGGERS = waterLevelLoggers;
+  console.log("LOGGERS REPORTS", API_LOGGERS);
+
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [reportsList, setReportsList] = useState([
+    {
+      ETag: "1",
+      Key: "Loading...",
+      LastModified: null,
+    },
+  ]);
 
   /////// THIS IS JUST A BUNCH OF TEST CODE ///////////////////////////////////////
   // The 'handleChildAction' imported here is a Server Action.
   // We can pass it directly to ChildComponent.
 
-  const handleActionFromChild = async (dataFromChild) => {
-    setParentMessage('Processing action...');
-    try {
-      // Call the server action directly from the client component
-      const result = await handleChildAction(dataFromChild);
-      setParentMessage(`Server response: ${result.message}`);
-      console.log('Server action successful:', result);
-    } catch (error) {
-      setParentMessage(`Error from server: ${error.message}`);
-      console.error('Error calling server action:', error);
-    }
+  //const handleReportsForm = async (selectLoggerId) => {
+  const handleReportsFormData = (reportsFormData) => {
+    //SEND REQUEST HERE WITH THE reportsFormData Object
+    console.log("PARENT FORM DATA", reportsFormData);
+
+    //Set a setIsProcessing(true) and send as prop to the reports form to display a processing message
+
+    //AWAIT THE RESULT and send the new report entry to the reports list
   };
   ////////////////////////////////////////////////////////////////////////////////////
 
+  useEffect(() => {
+    async function reportListData() {
+      try {
+        setIsLoading(true);
+        const listData = await reportsService.fetchReportsList();
+        console.log("3. Report Data", listData);
+        setReportsList(listData);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    reportListData();
+  }, []);
+
   return (
     <>
-    <p>{parentMessage}</p>
+      {isLoading ? <Spinner /> : null}
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
           <div className="min-h-[500px]">
-            <ReportForm 
+            <ReportForm
               //types={API_LOGGERS} //ONLY REQUIRED IF WE DECIDE TO CATER FOR ALL LOGGER TYPES IN ONE PLACE
-              onChildAction={handleActionFromChild}
-              loggers = {API_LOGGER_NAMES}
-              />
+              onSubmit={handleReportsFormData}
+              loggers={API_LOGGERS}
+            />
           </div>
           <div className="min-h-[700px] col-span-2">
-            <ReportsList reports={API_REPORTS} />
+              <ReportsList reportsList={reportsList} />
           </div>
           <div className="min-h-[500px]"></div>
         </div>

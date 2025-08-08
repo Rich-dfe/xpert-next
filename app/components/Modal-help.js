@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 
-export default function Modal({title, modalContent}) {
+export default function ModalHelp({title, modalContent}) {
   const [open, setOpen] = useState(false)
 
   return (

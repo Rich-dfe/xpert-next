@@ -3,30 +3,38 @@ import FormCard from "../Form-card";
 import FormStrip from "@/app/components/Form-strip";
 import FormStripError from "../Form-strip-error";
 import loggersService from "@/app/service/loggersService";
-import Modal from "../Modal";
+import ModalHelp from "../Modal-help";
 import Spinner from "../spinner";
+import {
+  isWaterLevelLoggerReadingValid,
+  isWaterLevelRefReadingValid,
+  isTemperatureValid,
+} from "@/app/utils.js/validation";
 
 function WaterLevelCalibrationForm({
   isSelectedLogger,
   helpContent,
   selectedLogger,
 }) {
-  const [userCalData, setUserCalData] = useState(
-    {
-      readingA: " ",
-      readingB: " ",
-      actualA: " ",
-      actualB: " ",
-      sensor_length: " ",
-      calibration_temperature: " ",
-      resolution: " ",
-      temperature_compensation: " ",
-      server_side_cal_flag: " ",
-      updated_at: " ",
-    }
-  );
+  const [userCalData, setUserCalData] = useState({
+    readingA: " ",
+    readingB: " ",
+    actualA: " ",
+    actualB: " ",
+    sensor_length: " ",
+    calibration_temperature: " ",
+    resolution: " ",
+    temperature_compensation: " ",
+    server_side_cal_flag: " ",
+    updated_at: " ",
+  });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [refOneIsInvalid, setRefOneIsInvalid] = useState(false);
+  const [refTwoIsInvalid, setRefTwoIsInvalid] = useState(false);
+  const [readingOneIsInvalid, setReadingOneIsInvalid] = useState(false);
+  const [readingTwoIsInvalid, setReadingTwoIsInvalid] = useState(false);
+  const [temperatureIsInvalid, setTemperatureIsInvalid] = useState(false);
 
   useEffect(() => {
     async function initialCalibrationData() {
@@ -44,13 +52,13 @@ function WaterLevelCalibrationForm({
           // and not inherited from the prototype chain
           if (Object.hasOwnProperty.call(calData[0], key)) {
             if (calData[0][key] === null) {
-              calData[0][key] = '';
+              calData[0][key] = "";
             }
           }
         }
 
         setUserCalData(calData[0]);
-        setIsLoading(false)
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -61,39 +69,84 @@ function WaterLevelCalibrationForm({
     }
   }, [selectedLogger]);
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "ref1") {
-      setUserCalData({...userCalData, actualA:value} );
-    } else if(name === "ref2"){
-      setUserCalData({...userCalData, actualB:value} );
-    } else if(name === "reading1"){
-      setUserCalData({...userCalData, readingA:value} );
-    } else if(name === "reading2"){
-      setUserCalData({...userCalData, readingB:value} );
-    } else if(name === "sensorLength"){
-      setUserCalData({...userCalData, sensor_length:value} );
-    } else if(name === "temperature"){
-      setUserCalData({...userCalData, calibration_temperature:value} );
+      setUserCalData({ ...userCalData, actualA: value });
+    } else if (name === "ref2") {
+      setUserCalData({ ...userCalData, actualB: value });
+    } else if (name === "reading1") {
+      setUserCalData({ ...userCalData, readingA: value });
+    } else if (name === "reading2") {
+      setUserCalData({ ...userCalData, readingB: value });
+    } else if (name === "sensorLength") {
+      setUserCalData({ ...userCalData, sensor_length: value });
+    } else if (name === "temperature") {
+      setUserCalData({ ...userCalData, calibration_temperature: value });
     }
   };
 
-  const handleCalibrationForm = (event) =>{
-    event.preventDefault();
-    console.log('HANDLING CALIBRATION FORM', userCalData);
-  }
+  const handleCalibrationForm = (e) => {
+    e.preventDefault();
+
+    //Sanitize Reference Values
+    if (!isWaterLevelRefReadingValid(userCalData.actualA)) {
+      setRefOneIsInvalid(true);
+      return;
+    } else {
+      setRefOneIsInvalid(false);
+    }
+
+    if (!isWaterLevelRefReadingValid(userCalData.actualB)) {
+      setRefTwoIsInvalid(true);
+      return;
+    } else {
+      setRefTwoIsInvalid(false);
+    }
+    //------------------------
+
+    // Sanitize Logger Reading Values
+    if (!isWaterLevelLoggerReadingValid(userCalData.readingA)) {
+      setReadingOneIsInvalid(true);
+      return;
+    } else {
+      setReadingOneIsInvalid(false);
+    }
+
+    if (!isWaterLevelLoggerReadingValid(userCalData.readingB)) {
+      setReadingTwoIsInvalid(true);
+      return;
+    } else {
+      setReadingTwoIsInvalid(false);
+    }
+    //------------------------
+
+    //Sanitize Temperature Value 
+    if (!isTemperatureValid(userCalData.calibration_temperature)) {
+      setTemperatureIsInvalid(true);
+      return;
+    } else {
+      setTemperatureIsInvalid(false);
+    }
+    //------------------------
+
+    //UPDATE DATABASE HERE AND DISPLAY A TOAST OR SOMETHING
+    console.log('Cal data',userCalData);
+  };
 
   return (
     <>
       <FormCard>
-        {(isLoading) ? <Spinner /> : null}
+        {isLoading ? <Spinner /> : null}
         {!isSelectedLogger ? (
           <FormStripError text="Error: No Logger Selected!" />
         ) : (
           <FormStrip text="Water Level Calibration" />
         )}
-        <form className="grid space-y-3 grid-cols-1 md:grid-cols-2 md:gap-x-8 md:gap-y-1" onSubmit={handleCalibrationForm}>
+        <form
+          className="grid space-y-3 grid-cols-1 md:grid-cols-2 md:gap-x-8 md:gap-y-1"
+          onSubmit={handleCalibrationForm}
+        >
           <div>
             <label
               htmlFor="ref1"
@@ -111,6 +164,9 @@ function WaterLevelCalibrationForm({
               placeholder="Ref 1"
               required
             />
+            <div className="text-red-600">
+              {refOneIsInvalid && <p>Limits= 100 to 5000!</p>}
+            </div>
           </div>
           <div>
             <label
@@ -129,6 +185,9 @@ function WaterLevelCalibrationForm({
               placeholder="Reading 1"
               required
             />
+            <div className="text-red-600">
+              {readingOneIsInvalid && <p>Limits= 1000.0 to 6553.5!</p>}
+            </div>
           </div>
           <div>
             <label
@@ -147,6 +206,9 @@ function WaterLevelCalibrationForm({
               placeholder="Ref 2"
               required
             />
+            <div className="text-red-600">
+              {refTwoIsInvalid && <p>Limits= 100 to 5000!</p>}
+            </div>
           </div>
           <div>
             <label
@@ -165,6 +227,9 @@ function WaterLevelCalibrationForm({
               placeholder="Reading 2"
               required
             />
+            <div className="text-red-600">
+              {readingTwoIsInvalid && <p>Limits= 1000.0 to 6553.5!</p>}
+            </div>
           </div>
           <div>
             <label
@@ -206,15 +271,22 @@ function WaterLevelCalibrationForm({
               placeholder="Temperature"
               required
             />
+            <div className="text-red-600">
+              {temperatureIsInvalid && <p>Limits= 0.00 - 99.99!</p>}
+            </div>
           </div>
 
           <div className="flex flex-col lg:col-span-2">
-              <span className="block text-sm font- font-medium text-gray-400">
-                Resolution = {userCalData.resolution} mm</span>
-              <span className="block text-sm font-medium text-gray-400">
-                Temperature Compensation = {userCalData.temperature_compensation} mm/°C</span>
-              <span className="block text-sm font-medium text-gray-400">
-                Last Updated: {userCalData.updated_at}</span>
+            <span className="block text-sm font- font-medium text-gray-400">
+              Resolution = {userCalData.resolution} mm
+            </span>
+            <span className="block text-sm font-medium text-gray-400">
+              Temperature Compensation = {userCalData.temperature_compensation}{" "}
+              mm/°C
+            </span>
+            <span className="block text-sm font-medium text-gray-400">
+              Last Updated: {userCalData.updated_at}
+            </span>
           </div>
 
           <div className="md:col-span-2 flex justify-center">
@@ -226,7 +298,7 @@ function WaterLevelCalibrationForm({
             </button>
           </div>
         </form>
-        <Modal title={"Water Level Calibration"} modalContent={helpContent} />
+        <ModalHelp title={"Water Level Calibration"} modalContent={helpContent} />
       </FormCard>
     </>
   );

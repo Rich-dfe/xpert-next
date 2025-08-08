@@ -3,6 +3,7 @@ import WaterLevelCalibrationForm from "@/app/components/water-level/calibration-
 import { useLoggers } from "@/app/store/user-loggers-context";
 import helpContent from "@/app/content/calibration-help.json"
 
+
 export default function WlHome() {
   //Get the loggers context
 const { waterLevelLoggers, selectedLogger, setSelectedLogger, isSelectedLogger, setIsSelectedLogger } = useLoggers();

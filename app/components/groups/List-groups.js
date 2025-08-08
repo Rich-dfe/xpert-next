@@ -7,15 +7,16 @@ const handleItemClick = (clickedItem) =>{
     alert(JSON.stringify(clickedItem));
 }
 
-function ListGroups(props) {
+function ListGroups({groups}) {
+  console.log('LIST GROUPS',groups);
   return (
     <>
       <FormCard>
         <FormStrip text="My Groups" />
           <ul>
-            {props.groups.map((group) => {
-              return <li key={group.value} className="flex items-center justify-center p-2 my-2
-                rounded-md cursor-pointer bg-gray-400 hover:bg-green-300" onClick={() => handleItemClick(group)}>{group.label}</li>;
+            {groups.map((group) => {
+              return <li key={group.id} className="flex items-center justify-center p-2 my-2
+                rounded-md cursor-pointer bg-gray-400 hover:bg-green-300 active:bg-green-300 active:scale-98 transition duration-300 font-semibold" onClick={() => handleItemClick(group)}>{group.group_name}</li>;
             })}
           </ul>
       </FormCard>

@@ -2,13 +2,14 @@ import FormCard from "../Form-card";
 import InfoCard from "../Info-card";
 import FormStrip from "../Form-strip";
 import { decimalToHex } from "@/app/utils.js/formatters/formatSerialNumber";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
 import Spinner from "../spinner";
 
 
 function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model, isSelectedLogger, selectedLogger, isLoading}) {
   const [firmwareUpdate, setFirmwareUpdate] = useState(false);
+  const [noDataPlaceHolder, setNoDataPlaceHolder] = useState("-----");
 
   const handleChange = (e)=>{
     const { name, value } = e.target;
@@ -20,16 +21,18 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
     } 
   }
 
-  const noDataPlaceHolder = "-----";
+  useEffect(()=>{
+  isLoading ? setNoDataPlaceHolder("Loading...") : setNoDataPlaceHolder("-----");
+  },[isLoading])
 
   return (
     <>
       <FormCard>
-        {(isLoading) ? <Spinner /> : null}
+        {/* {(isLoading) ? <Spinner /> : null} */}
         <FormStrip text="My Loggers" />
         <div>
           <select name="loggerSelect" onChange={handleChange} value={selectedLogger[0].id} className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm">
-            <option>Select an option</option>
+            <option>Select Logger</option>
             {loggers.map((logger) => {
               return (
                 <option key={logger.id} value={logger.id}>

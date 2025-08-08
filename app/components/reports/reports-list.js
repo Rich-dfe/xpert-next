@@ -2,18 +2,17 @@ import FormCard from "@/app/components/Form-card";
 import FormStrip from "@/app/components/Form-strip";
 import ReportListItem from "@/app/components/reports/report-list-item";
 
-const ReportsList = ({ reports }) => {
+const ReportsList = ({ reportsList }) => {
   return (
     <>
       <FormCard>
         <FormStrip text="Available Downloads" />
-        {reports.map((item) => {
+        {reportsList.map((item) => {
           return (
             <ReportListItem
-              key={item.id}
-              loggerName={item.loggerName}
-              rangeStart={item.rangeStart}
-              rangeEnd={item.rangeEnd}
+              key={item.Etag}
+              fileName={item.Key}
+              modified={item.LastModified}
             />
           );
         })};

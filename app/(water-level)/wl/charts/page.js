@@ -29,6 +29,7 @@ export default function WlCharts() {
     ],
   ]);
 
+
   const chartTitle = "Water Level & Temperature";
   const primaryAxisText = "Water Level (mm)";
   const secondaryAxisText = "Temperature";

@@ -9,13 +9,14 @@ function ListGroupsLoggers(props) {
         <FormStrip text="Loggers belonging to group" />
         <InfoCard>
           <ul>
-            {props.groupLoggers.map((groupLogger) => {
+            {/* {props.groupLoggers.map((groupLogger) => {
               return (
                 <li key={groupLogger.value} className="justify-content-center">
                   {groupLogger.label}
                 </li>
               );
-            })}
+            })} */}
+            {"A logger"}
           </ul>
         </InfoCard>
       </FormCard>

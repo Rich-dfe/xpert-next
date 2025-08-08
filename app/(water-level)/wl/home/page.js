@@ -24,6 +24,8 @@ export default function WlHome() {
     formattedLogDateTime:null,
     logDateTime: null,
   });
+
+  const [isLoading, setIsLoading] = useState(false);
   
   //Get the loggers context
   const { waterLevelLoggers, selectedLogger, setSelectedLogger, isSelectedLogger, setIsSelectedLogger } = useLoggers();
@@ -31,11 +33,13 @@ export default function WlHome() {
   const API_LOGGERS = waterLevelLoggers;
  
   const handleSelectedLogger = async (selectLoggerId) => {
+    setIsLoading(true);
     const selectedLoggerData = await loggersService.fetchGeneralLoggerInfo(selectLoggerId);
     //console.log('1 SERVICE DATA ON PAGE.JS',selectedLoggerData);
     //Set the context data
     setSelectedLogger(selectedLoggerData);
     setIsSelectedLogger(true);
+    setIsLoading(false);
   };
 
   const handleLoggerConfigForm = (configFormData) =>{
@@ -70,6 +74,7 @@ export default function WlHome() {
               model={selectedLogger[0].model}
               isSelectedLogger={isSelectedLogger}
               selectedLogger={selectedLogger}
+              isLoading={isLoading}
             />
           </div>
           <div className="min-h-[500px]">

@@ -31,18 +31,16 @@ const loggersService = {
     }
   },
 
-  fetchLoggersByGroupId: async (groupId) => {
+  fetchLoggersByGroupId: async (groupId, userId) => {
     try {
-      const response = await api.get(
-        import.meta.env.VITE_GROUP_LOGGERS_BASE,
-        {
+      const response = await api.get("/group/loggers",{
           params: {
-            groupId: groupInfo.value.id,
-            userId: groupInfo.value.user_id,
+            groupId: groupId,
+            userId: userId,
           },
         }
       );
-      loggers.value = response.data;
+      return response.data;
     } catch (error) {
       //await signOut();
     }
