@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { CheckCircleIcon } from '@heroicons/react/24/solid'
 
-export default function ModalAlert({onClose, state, title, text}) {
+
+export default function ModalAlert({onClose, state, title, text, type}) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -23,9 +25,16 @@ export default function ModalAlert({onClose, state, title, text}) {
             >
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
+                  { type === "red" &&
                   <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
                     <InformationCircleIcon aria-hidden="true" className="size-6 text-red-600" />
                   </div>
+                  }
+                  { type === "green" &&
+                  <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:size-10">
+                    <CheckCircleIcon aria-hidden="true" className="size-6 text-green-600" />
+                  </div>
+                  }
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
                       {title}

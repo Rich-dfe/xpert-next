@@ -14,6 +14,16 @@ export default function WlGroups() {
   //Get the loggers context
   const [isLoading, setIsLoading] = useState();
   const [isModalAlertOpen, setIsModalAlertOpen] = useState(false);
+  const [isMovedLoggerModalOpen, setIsMovedLoggerModalOpen] = useState(false);
+  const [isGroupDeleted, setIsGroupDelete] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const [loggersInGroup, setLoggersInGroup] = useState([
+    {
+      id:-1,
+      logger_name:"Please select a group...",
+      logger_uid: null,
+      product_id:null
+    }]);
   const [groups, setGroups] = useState([
     {
       id: 1,
@@ -39,13 +49,22 @@ export default function WlGroups() {
     }
 
     groupsData();
-  }, []);
+  }, [isGroupDeleted]);
 
   //Event Handlers
-  const handleMoveLoggerToGroup = (groupId, loggerId) => {
-    console.log("Moving Logger", loggerId, groupId);
-    //set any state that needs to be updated and sent to the child component
-    //This may require changing the dependency array on the useEffect function.
+  const handleMoveLoggerToGroup = async (groupId, loggerId) => {
+    try {
+        //setIsLoading(true);
+        const updateLoggerResponse = await groupsService.updateLoggerGroup(groupId, loggerId);
+        const groupLoggers = await loggersService.fetchLoggersByGroupId(selectedGroupId);
+        setLoggersInGroup(groupLoggers);
+        if(updateLoggerResponse.changedRows > 0){
+          setIsMovedLoggerModalOpen(true);
+        }
+        //setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   const handleNewGroup = (newGroupName) => {
@@ -60,15 +79,32 @@ export default function WlGroups() {
       console.log("Group Not Empty", groupContents);
     } else {
       setIsModalAlertOpen(false);
-      console.log("Group can be deleted");
+      const deleteResult = await groupsService.deleteGroup(groupId);
+      setIsGroupDelete(!isGroupDeleted);
+      //console.log("Group deleted", deleteResult);
     }
-    //const isGroupDeleted = groupsService.deleteGroup(groupId);
-    //console.log('Delete Group', isGroupDeleted);
   };
 
   const handleModalAlertClose = () => {
       setIsModalAlertOpen(false);
     };
+
+  const handleMoveLoggerModalClose = () => {
+      setIsMovedLoggerModalOpen(false);
+    };
+
+  const handleGroupListSelect = async (groupData) =>{
+    try {
+        //This is used to update logger lists in the handleMoveLoggerToGroup function
+        setSelectedGroupId(groupData.id);
+        //setIsLoading(true);
+        const groupLoggers = await loggersService.fetchLoggersByGroupId(groupData.id);
+        setLoggersInGroup(groupLoggers);
+        //setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+  }
 
   return (
     <>
@@ -85,10 +121,10 @@ export default function WlGroups() {
             />
           </div>
           <div className="min-h-[500px]">
-            <ListGroups groups={groups} />
+            <ListGroups groups={groups} onClick={handleGroupListSelect} />
           </div>
           <div className="min-h-[500px]">
-            <ListGroupsLoggers groupLoggers={API_LOGGERS} />
+            <ListGroupsLoggers groupLoggers={loggersInGroup} />
           </div>
         </div>
       </div>
@@ -98,8 +134,18 @@ export default function WlGroups() {
             state={isModalAlertOpen}
             title="Cannot delete group!"
             text="The group is not empty. Please move loggers to another group then try again."
+            type="red"
           />
-        )}
+        )};
+        {isMovedLoggerModalOpen && (
+          <ModalAlert
+            onClose={handleMoveLoggerModalClose}
+            state={isMovedLoggerModalOpen}
+            title="Success"
+            text="Your logger has been moved."
+            type="green"
+          />
+        )};
     </>
   );
 }

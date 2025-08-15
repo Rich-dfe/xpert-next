@@ -18,7 +18,31 @@ const groupsService = {
 
   deleteGroup: async (gid) =>{
     try{
-      const response = await api.delete("/group");
+      const response = await api.delete("/group",{
+        params:{ groupId: gid }
+      });
+      return response.data;
+    }catch(error){
+      console.log("Server response error", error);
+    }
+  },
+
+  updateLoggerGroup: async (gid, lid) => {
+    try{
+      const response = await api.patch("/group",
+        { groupId: gid, loggerId: lid }
+      );
+      return response.data;
+    }catch(error){
+      console.log("Server response error", error);
+    }
+  },
+
+  createNewGroup: async (gid, lid) =>{
+    try{
+      const response = await api.post("/group",
+        { groupId: gid, loggerId: lid }
+      );
       return response.data;
     }catch(error){
       console.log("Server response error", error);
