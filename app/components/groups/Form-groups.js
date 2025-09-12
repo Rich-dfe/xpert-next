@@ -84,7 +84,6 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
   }
 
   const handleModalConfirm = () =>{
-    console.log('Modal action done here');
     //DO STUFF HERE
     //SAVE CHANGES HERE AND TRIGGER RERENDER IF NECESSARY.
     handleDeleteGroup(deleteGroupId);
@@ -108,7 +107,6 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
               className="block text-gray-300 text-sm font-medium mb-1"
               htmlFor="group"
             >
-              Select Logger {selectedLogger} {selectedGroup}
             </label>
           </div>
           <div>

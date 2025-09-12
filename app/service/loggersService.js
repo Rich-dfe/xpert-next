@@ -90,7 +90,21 @@ const loggersService = {
     }catch(error){
       throw new Error('Could not fetch user calibration data - service 93', error)
     }
+  },
+
+  updateUserCalibrationData: async(calDataObj)=>{
+    console.log('Saving cal data 1', calDataObj);
+    try{
+      const response = await api.patch("/settings/user/cal",{
+        calDataObj
+      });
+      return response.data;
+
+    }catch(error){
+      throw new Error('Could not save calibration data', error)
+    }
   }
+
 };
 
 export default loggersService;

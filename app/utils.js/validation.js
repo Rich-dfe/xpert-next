@@ -50,3 +50,12 @@ export function isTemperatureValid(value){
         return false;
     }
 }
+
+export function roundToDecimalPlace(num) {
+    const numStr = num.toString();
+    //if the number has 5 digits it does not have a decimal place in it
+    if(numStr.length == 5){
+            return num/10;
+    }else return num;
+    
+}

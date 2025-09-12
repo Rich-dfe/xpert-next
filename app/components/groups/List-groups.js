@@ -27,7 +27,7 @@ function ListGroups({ groups, onClick }) {
                 }`}
                 onClick={() => handleClick(group)}
               >
-                {group.group_name} {group.id}
+                {group.group_name}
               </li>
             );
           })}

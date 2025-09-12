@@ -4,7 +4,7 @@ import InfoCard from "../Info-card";
 import { useState } from "react";
 
 function ListGroupsLoggers({groupLoggers}) {
-  
+  //console.log("groupLoggersList",groupLoggers);
   return (
     <>
       <FormCard>

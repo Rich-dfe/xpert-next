@@ -38,10 +38,10 @@ const groupsService = {
     }
   },
 
-  createNewGroup: async (gid, lid) =>{
+  createNewGroup: async (newName, userId, customerId) =>{
     try{
       const response = await api.post("/group",
-        { groupId: gid, loggerId: lid }
+        { name: newName, userId: userId, customerId: customerId }
       );
       return response.data;
     }catch(error){

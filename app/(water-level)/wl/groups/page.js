@@ -8,13 +8,12 @@ import { useLoggers } from "@/app/store/user-loggers-context";
 import loggersService from "@/app/service/loggersService";
 import groupsService from "@/app/service/groupsService";
 import Spinner from "@/app/components/spinner";
-import ModalAlert from "@/app/components/Modal-alert";
+import { useModal } from "@/app/hooks/useModal";
+import ModalAlertHook from "@/app/components/Modal-alert-hook";
 
 export default function WlGroups() {
   //Get the loggers context
   const [isLoading, setIsLoading] = useState();
-  const [isModalAlertOpen, setIsModalAlertOpen] = useState(false);
-  const [isMovedLoggerModalOpen, setIsMovedLoggerModalOpen] = useState(false);
   const [isGroupDeleted, setIsGroupDelete] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [loggersInGroup, setLoggersInGroup] = useState([
@@ -32,6 +31,7 @@ export default function WlGroups() {
     },
   ]);
 
+  const {isOpen,message,title,type,openModal,closeModal} = useModal();
   const { waterLevelLoggers } = useLoggers();
   const API_LOGGERS = waterLevelLoggers;
 
@@ -40,8 +40,10 @@ export default function WlGroups() {
       try {
         setIsLoading(true);
         const groupsData = await groupsService.fetchGroupsList(34);
-        //console.log("Groups Data", groupsData);
+        console.log("Groups Data", groupsData);
         setGroups(groupsData);
+        //We need to set the selectedGroupId to a default value when the page is first loaded  
+        setSelectedGroupId(groupsData[0].id);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
@@ -59,7 +61,7 @@ export default function WlGroups() {
         const groupLoggers = await loggersService.fetchLoggersByGroupId(selectedGroupId);
         setLoggersInGroup(groupLoggers);
         if(updateLoggerResponse.changedRows > 0){
-          setIsMovedLoggerModalOpen(true);
+          openModal('Succcess!','Your logger has been moved.','green');
         }
         //setIsLoading(false);
       } catch (error) {
@@ -67,31 +69,44 @@ export default function WlGroups() {
       }
   };
 
-  const handleNewGroup = (newGroupName) => {
-    console.log("Handling new group", newGroupName);
-  };
+  const handleNewGroup = async (newGroupName) => {
+    //iterate over the groups state variable to see if the name already exists
+    for(let i=0; i< groups.length; i++){
+      if(newGroupName.trim().toUpperCase() === groups[i].group_name.trim().toUpperCase()){
+        openModal('Group Already Exists!','Each account must have a unique name.','red');
+        return;
+      }
+    };
 
-  const handleDeleteGroup = async (groupId) => {
-    //Check for empty group before deleting.
-    const groupContents = await loggersService.fetchLoggersByGroupId(groupId);
-    if (groupContents.length > 0) {
-      setIsModalAlertOpen(true);
-      console.log("Group Not Empty", groupContents);
-    } else {
-      setIsModalAlertOpen(false);
-      const deleteResult = await groupsService.deleteGroup(groupId);
-      setIsGroupDelete(!isGroupDeleted);
-      //console.log("Group deleted", deleteResult);
+    const userId = groups[0].user_id;
+    const customerId = groups[0].customer_id;
+    
+    const newGroupResponse = await groupsService.createNewGroup(newGroupName, userId, customerId);
+    
+    if(newGroupResponse.affectedRows === 1){
+      const groupsData = await groupsService.fetchGroupsList(34);
+      setGroups(groupsData);
     }
   };
 
-  const handleModalAlertClose = () => {
-      setIsModalAlertOpen(false);
+  const handleDeleteGroup = async (groupId) => {
+    //check for the home group as this cannot tbe deleted.
+    for(let i=0; i< groups.length; i++){
+      if(groups[i].id == groupId && groups[i].group_name == "Home"){
+        openModal('Cannot Delete Home Group','This is the default system group for your account.','red');
+        return;
+      }
     };
-
-  const handleMoveLoggerModalClose = () => {
-      setIsMovedLoggerModalOpen(false);
-    };
+    
+    //Check for empty group before deleting.
+    const groupContents = await loggersService.fetchLoggersByGroupId(groupId);
+    if (groupContents.length > 0) {
+      openModal('Cannot Delete Group','The group is not empty. Please move loggers to another group then try again.','red');
+    } else {
+      const deleteResult = await groupsService.deleteGroup(groupId);
+      setIsGroupDelete(!isGroupDeleted);
+    }
+  };
 
   const handleGroupListSelect = async (groupData) =>{
     try {
@@ -124,28 +139,13 @@ export default function WlGroups() {
             <ListGroups groups={groups} onClick={handleGroupListSelect} />
           </div>
           <div className="min-h-[500px]">
-            <ListGroupsLoggers groupLoggers={loggersInGroup} />
+            <ListGroupsLoggers groupLoggers={loggersInGroup}/>
           </div>
         </div>
       </div>
-      {isModalAlertOpen && (
-          <ModalAlert
-            onClose={handleModalAlertClose}
-            state={isModalAlertOpen}
-            title="Cannot delete group!"
-            text="The group is not empty. Please move loggers to another group then try again."
-            type="red"
-          />
-        )};
-        {isMovedLoggerModalOpen && (
-          <ModalAlert
-            onClose={handleMoveLoggerModalClose}
-            state={isMovedLoggerModalOpen}
-            title="Success"
-            text="Your logger has been moved."
-            type="green"
-          />
-        )};
+
+      {/* //// Modal alerts //// */}
+      <ModalAlertHook onClose={closeModal} isOpen={isOpen} title={title} text={message} type={type}/>
     </>
   );
 }

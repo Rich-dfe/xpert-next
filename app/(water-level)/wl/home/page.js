@@ -5,8 +5,24 @@ import SelectLoggersForm from "@/app/components/loggers/Select-loggers";
 import MapBox from "@/app/components/loggers/Map-box";
 import { useLoggers } from "@/app/store/user-loggers-context";
 import loggersService from "@/app/service/loggersService";
+import settingsService from "@/app/service/settingsService";
+import ModalAlert from "@/app/components/Modal-alert";
 
 export default function WlHome() {
+  const [isModalAlertOpen, setIsModalAlertOpen] = useState(false);
+  const [loggerConfigData, setLoggerConfigData] = useState({
+    x0000: null,
+    x000E: null,
+    x0013: null,
+    x0018: null,
+    x0060: null,
+    timezone: null,
+    logger_name: null,
+    notes: null,
+    site: null,
+    group_name: null,
+  });
+
   const [latestDiagnosticData, setLatestDiagnosticData] = useState({
     createdAt: null,
     ttlDate: null,
@@ -21,20 +37,28 @@ export default function WlHome() {
         settingsVersion: null,
       },
     ],
-    formattedLogDateTime:null,
+    formattedLogDateTime: null,
     logDateTime: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  
+
   //Get the loggers context
-  const { waterLevelLoggers, selectedLogger, setSelectedLogger, isSelectedLogger, setIsSelectedLogger } = useLoggers();
+  const {
+    waterLevelLoggers,
+    selectedLogger,
+    setSelectedLogger,
+    isSelectedLogger,
+    setIsSelectedLogger,
+  } = useLoggers();
 
   const API_LOGGERS = waterLevelLoggers;
- 
+
   const handleSelectedLogger = async (selectLoggerId) => {
     setIsLoading(true);
-    const selectedLoggerData = await loggersService.fetchGeneralLoggerInfo(selectLoggerId);
+    const selectedLoggerData = await loggersService.fetchGeneralLoggerInfo(
+      selectLoggerId
+    );
     //console.log('1 SERVICE DATA ON PAGE.JS',selectedLoggerData);
     //Set the context data
     setSelectedLogger(selectedLoggerData);
@@ -42,26 +66,52 @@ export default function WlHome() {
     setIsLoading(false);
   };
 
-  const handleLoggerConfigForm = (configFormData) =>{
-    console.log('HANDLING CONFIG FORM', configFormData);
+  const handleLoggerConfigForm = async (configFormData) => {
+    //Append the logger id to the settings object for the service request.
+    
+    configFormData.id = selectedLogger[0].id;
+    const updateConfigSettings = await settingsService.saveLoggerConfigSettings(
+      configFormData
+    );
+    setIsModalAlertOpen(true);
+    //console.log(updateConfigSettings);
+  };
+
+  const handleModalAlertClose = () => {
+    setIsModalAlertOpen(false);
   }
 
-    useEffect(() => {
-      async function diagnosticData(){
-        try{
-          const dxData = await loggersService.fetchLatestDiagnosticData(selectedLogger[0].logger_uid);
-          //console.log('3. DX Data', dxData);
-          setLatestDiagnosticData(dxData[0]);
-        }catch(error){
-          console.log(error);
-        }
+  useEffect(() => {
+    async function diagnosticData() {
+      try {
+        const dxData = await loggersService.fetchLatestDiagnosticData(
+          selectedLogger[0].logger_uid
+        );
+        //console.log('3. DX Data', dxData);
+        setLatestDiagnosticData(dxData[0]);
+      } catch (error) {
+        console.log(error);
       }
-      //Attemp to get the dignostic data only if a logger has been selected.
-      if(isSelectedLogger){
+    }
+    //Attemp to get the dignostic data only if a logger has been selected.
+    if (isSelectedLogger) {
       diagnosticData();
-      }
-    },[selectedLogger])
+    }
+  }, [selectedLogger]);
 
+  useEffect(() => {
+    async function configData() {
+      const configData = await settingsService.fetchLoggerConfigSettings(
+        selectedLogger[0].id
+      );
+      setLoggerConfigData(configData[0]);
+      console.log("CONFIG DATA", configData);
+    }
+    if (isSelectedLogger) {
+      configData();
+    }
+  }, [selectedLogger]);
+ 
   return (
     <>
       <div className="container mx-auto p-4">
@@ -78,13 +128,30 @@ export default function WlHome() {
             />
           </div>
           <div className="min-h-[500px]">
-            <MapBox coords={[selectedLogger[0].lat, selectedLogger[0].lng]} id={selectedLogger[0].id} logger_name={selectedLogger[0].logger_name}/>
+            <MapBox
+              coords={[selectedLogger[0].lat, selectedLogger[0].lng]}
+              id={selectedLogger[0].id}
+              logger_name={selectedLogger[0].logger_name}
+            />
           </div>
           <div className="min-h-[500px]">
-            <LoggerConfigForm onSubmit={handleLoggerConfigForm} initialData={selectedLogger[0]}/>
+            <LoggerConfigForm
+              onSubmit={handleLoggerConfigForm}
+              initialData={loggerConfigData}
+            />
           </div>
+          {isModalAlertOpen && (
+        <ModalAlert
+          onClose={handleModalAlertClose}
+          state={isModalAlertOpen}
+          title="Success."
+          text="Your logger config settings have been saved."
+          type="green"
+        />
+      )}
         </div>
       </div>
+      
     </>
   );
 }
