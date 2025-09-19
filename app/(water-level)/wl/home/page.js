@@ -6,10 +6,16 @@ import MapBox from "@/app/components/loggers/Map-box";
 import { useLoggers } from "@/app/store/user-loggers-context";
 import loggersService from "@/app/service/loggersService";
 import settingsService from "@/app/service/settingsService";
+import { useModal } from "@/app/hooks/useModal";
+import { useSettingsVersion } from "@/app/hooks/useSettingsVersion";
 import ModalAlert from "@/app/components/Modal-alert";
+import useAuditTrail from "@/app/hooks/useAudit";
 
 export default function WlHome() {
-  const [isModalAlertOpen, setIsModalAlertOpen] = useState(false);
+  const {isOpen,message,title,type,openModal,closeModal} = useModal();
+  const {version,fetchSettingsVersion} = useSettingsVersion();
+  
+  const recordAction = useAuditTrail();
   const [loggerConfigData, setLoggerConfigData] = useState({
     x0000: null,
     x000E: null,
@@ -73,13 +79,12 @@ export default function WlHome() {
     const updateConfigSettings = await settingsService.saveLoggerConfigSettings(
       configFormData
     );
-    setIsModalAlertOpen(true);
-    //console.log(updateConfigSettings);
+    console.log('CONFIG FORM SAVED',updateConfigSettings)
+    openModal('Succcess!','Your logger config settings have been saved.','green');
+    await fetchSettingsVersion(selectedLogger[0].id);
+    //Record the action to the audit log
+    recordAction('Logger Config',configFormData);
   };
-
-  const handleModalAlertClose = () => {
-    setIsModalAlertOpen(false);
-  }
 
   useEffect(() => {
     async function diagnosticData() {
@@ -106,6 +111,8 @@ export default function WlHome() {
       );
       setLoggerConfigData(configData[0]);
       console.log("CONFIG DATA", configData);
+      //This function is supplied by the useSettingsVersion hook.
+      await fetchSettingsVersion(selectedLogger[0].id);
     }
     if (isSelectedLogger) {
       configData();
@@ -125,6 +132,7 @@ export default function WlHome() {
               isSelectedLogger={isSelectedLogger}
               selectedLogger={selectedLogger}
               isLoading={isLoading}
+              settingsVersion={version}
             />
           </div>
           <div className="min-h-[500px]">
@@ -140,15 +148,7 @@ export default function WlHome() {
               initialData={loggerConfigData}
             />
           </div>
-          {isModalAlertOpen && (
-        <ModalAlert
-          onClose={handleModalAlertClose}
-          state={isModalAlertOpen}
-          title="Success."
-          text="Your logger config settings have been saved."
-          type="green"
-        />
-      )}
+          <ModalAlert onClose={closeModal} isOpen={isOpen} title={title} text={message} type={type}/>
         </div>
       </div>
       

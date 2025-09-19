@@ -2,23 +2,44 @@ import api from "./axiosInstance";
 
 const helperService = {
 
-    updateServerSettingsVersion: async (loggerId) => {
+    fetchSettingsVersion: async (loggerId) => {
     try {
-      const response = await api.get("/settings/logger/config", {
+      const response = await api.get("/settings/version", {
         params: { loggerId: loggerId },
       });
-      console.log("Service response", response);
       return response.data;
     } catch (error) {
-      console.log("Server response error", error);
+      console.error("Server response error", error);
       //alert('fetchLoggersByUserId: '+error);
       //await signOut();
     }
   },
 
-  updateAuditTrail: async(dataObj) =>{
-    //update dynamodb audit trail table
-    //Append new object to the currently saved object
+  updateSettingsVersion: async (loggerId) => {
+    try{
+      const response = await api.patch("settings/version",{
+        loggerId: loggerId
+      });
+      //console.log("UPDATE RESULT",response);
+      return response;
+      
+    }catch(error){
+      console.error('Cannot update settings version');
+    }
+  },
+
+  updateAuditTrail: async (action,auditData) =>{
+    console.log('Updating Audit with',action,auditData)
+    try{
+      const response = await api.post("audit",{
+        auditData: auditData
+      });
+      console.log("AUDIT RESULT",response);
+      return response;
+      
+    }catch(error){
+      console.error('Cannot update settings version');
+    }
   }
 
 }

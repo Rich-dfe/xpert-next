@@ -9,7 +9,7 @@ import loggersService from "@/app/service/loggersService";
 import groupsService from "@/app/service/groupsService";
 import Spinner from "@/app/components/spinner";
 import { useModal } from "@/app/hooks/useModal";
-import ModalAlertHook from "@/app/components/Modal-alert-hook";
+import ModalAlert from "@/app/components/Modal-alert";
 
 export default function WlGroups() {
   //Get the loggers context
@@ -145,7 +145,7 @@ export default function WlGroups() {
       </div>
 
       {/* //// Modal alerts //// */}
-      <ModalAlertHook onClose={closeModal} isOpen={isOpen} title={title} text={message} type={type}/>
+      <ModalAlert onClose={closeModal} isOpen={isOpen} title={title} text={message} type={type}/>
     </>
   );
 }

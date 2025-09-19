@@ -7,7 +7,7 @@ import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
 import Spinner from "../spinner";
 
 
-function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model, isSelectedLogger, selectedLogger, isLoading}) {
+function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model, isSelectedLogger, selectedLogger, isLoading, settingsVersion}) {
   const [firmwareUpdate, setFirmwareUpdate] = useState(false);
   const [noDataPlaceHolder, setNoDataPlaceHolder] = useState("-----");
 
@@ -75,20 +75,24 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
                 <td>{(latestDiagnosticData.diagnostics[0].rssi === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].rssi}</td>
               </tr>
               <tr>
-                <td>Settings Version</td>
-                <td>{(latestDiagnosticData.diagnostics[0].settingsVersion === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].settingsVersion}</td>
-              </tr>
-              <tr>
                 <td>Status Flags</td>
                 <td>{(latestDiagnosticData.diagnostics[0].statusFlags === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].statusFlags}</td>
               </tr>
               <tr>
-                <td>Firmware Version</td>
-                <td>{noDataPlaceHolder}</td>
+                <td><hr class="my-2 border-t border-gray-400"></hr></td>
+                <td><hr class="my-2 border-t border-gray-400"></hr></td>
               </tr>
               <tr>
-                <td>Other 2</td>
-                <td>{noDataPlaceHolder}</td>
+                <td>Server Settings</td>
+                <td>{(settingsVersion[0].x002F === null) ? noDataPlaceHolder : `v${settingsVersion[0].x002F}`}</td>
+              </tr>
+              <tr>
+                <td>Logger Settings</td>
+                <td>{(settingsVersion[0].settingsVersionInUse === null) ? noDataPlaceHolder : `v${settingsVersion[0].settingsVersionInUse}`}</td>
+              </tr>
+              <tr>
+                <td>Firmware Version</td>
+                <td>{(selectedLogger[0].firmwareVersionInUse === null) ? noDataPlaceHolder : `v${selectedLogger[0].firmwareVersionInUse}`}</td>
               </tr>
             </tbody>
           </table>

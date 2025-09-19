@@ -1,17 +1,14 @@
 'use client'
-
-import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
 
 
-export default function ModalAlert({onClose, state, title, text, type}) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function ModalAlert({onClose, isOpen, title, text, type}) {
 
   return (
     <div>
-      <Dialog open={state} onClose={() => setIsOpen(false)} className="relative z-1000">
+      <Dialog open={isOpen} onClose={onClose} className="relative z-1000">
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"

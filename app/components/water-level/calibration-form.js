@@ -5,7 +5,10 @@ import FormStripError from "../Form-strip-error";
 import loggersService from "@/app/service/loggersService";
 import ModalHelp from "../Modal-help";
 import { useModal } from "@/app/hooks/useModal";
-import ModalAlertHook from "../Modal-alert-hook";
+import { useSettingsVersion } from "@/app/hooks/useSettingsVersion";
+import ModalAlert from "../Modal-alert";
+import useAuditTrail from "@/app/hooks/useAudit";
+import { formatISO6801Date } from "@/app/utils.js/formatters/formatDate";
 import Spinner from "../spinner";
 import {
   isWaterLevelLoggerReadingValid,
@@ -54,10 +57,15 @@ function WaterLevelCalibrationForm({
   const [readingOneIsInvalid, setReadingOneIsInvalid] = useState(false);
   const [readingTwoIsInvalid, setReadingTwoIsInvalid] = useState(false);
   const [temperatureIsInvalid, setTemperatureIsInvalid] = useState(false);
+  //The fetchCalData toggle state is used as a way of triggering a re-render when the form is submitted.
+  //This allows the calculated resolution and temp compensation to be immediately displayed.
+  const [fetchCalData, setFetchCalData] = useState(false);
   const [setToDefault, setSetToDefault] = useState(false);
   const loggerId  = selectedLogger[0].id;
   const loggerType = 4131;
   const {isOpen,message,title,type,openModal,closeModal} = useModal();
+  const {version,fetchSettingsVersion} = useSettingsVersion();
+  const recordAction = useAuditTrail();
 
   useEffect(() => {
     async function initialCalibrationData() {
@@ -81,6 +89,7 @@ function WaterLevelCalibrationForm({
         }
 
         setUserCalData(calData[0]);
+        fetchSettingsVersion(selectedLogger[0].id);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
@@ -90,7 +99,7 @@ function WaterLevelCalibrationForm({
     if (isSelectedLogger) {
       initialCalibrationData();
     }
-  }, [selectedLogger]);
+  }, [selectedLogger,fetchCalData]);
 
   //console.log('SELECTED',selectedLogger);
 
@@ -184,8 +193,11 @@ function WaterLevelCalibrationForm({
 
   const apiUpdateCalData = async (formData) => {
     const calUpdateResponse = await loggersService.updateUserCalibrationData(formData);
-    console.log(calUpdateResponse);
+    //console.log(calUpdateResponse);
     if(calUpdateResponse.affectedRows === 1){
+      recordAction('Water Level Calibration',formData,selectedLogger[0].id);
+      fetchSettingsVersion(selectedLogger[0].id);
+      setFetchCalData(!fetchCalData);
       openModal('Succcess','Your settings have been saved.','green');
     }
 
@@ -366,7 +378,10 @@ function WaterLevelCalibrationForm({
               mm/°C
             </span>
             <span className="block text-sm font-medium text-gray-400">
-              Last Updated: {userCalData.updated_at}
+              Last Updated: {formatISO6801Date(userCalData.updated_at,'local')}
+            </span>
+            <span className="block text-sm font-bold text-gray-400">
+              Server Settings: {`v${version[0].x002F}`}
             </span>
           </div>
 
@@ -380,7 +395,7 @@ function WaterLevelCalibrationForm({
           </div>
         </form>
         <ModalHelp title={"Water Level Calibration"} modalContent={helpContent} />
-        <ModalAlertHook onClose={closeModal} isOpen={isOpen} title={title} text={message} type={type}/>
+        <ModalAlert onClose={closeModal} isOpen={isOpen} title={title} text={message} type={type}/>
       </FormCard>
     </>
   );

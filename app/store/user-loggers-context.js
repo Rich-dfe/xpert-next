@@ -28,11 +28,7 @@ export const LoggersProvider = ({ children }) => {
       setError(null);
       try {
         const data = await loggersService.fetchLoggersByUserId(32);
-        // const response = await fetch('https://lj0tvmbnwe.execute-api.ap-southeast-2.amazonaws.com/dev/user/loggers?userId=32');
-        // if (!response.ok) {
-        //   throw new Error(`HTTP error! status: ${response.status}`);
-        // }
-        // const data = await response.json();
+        
         setAllLoggers(data);
         //Filter Water Level Loggers
         const wlLoggersArray = data.filter((item) => item.product_id <= 7);
