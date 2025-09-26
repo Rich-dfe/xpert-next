@@ -1,135 +1,127 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import chartDataService from "@/app/service/chartDataService";
 import dynamic from "next/dynamic";
 import ChartCard from "../chart-card";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const DualAxisChart = ({chartData, title, primaryAxisText, secondaryAxisText}) => {
-  const [chartOptions, setChartOptions] = useState({
-    options: {
-      chart: {
-        id: "dual-axis-line",
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      grid: {
-        show: true,
-        borderColor: "#90A4AE",
-        strokeDashArray: 0,
-        position: "back",
-        xaxis: {
-          lines: {
-            show: false,
-          },
-        },
-        yaxis: {
-          lines: {
-            show: true,
-          },
-        },
-      },
-      title: {
-        text: title,
-        align: "center",
-        margin: 10,
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize: "24px",
-          fontWeight: "bold",
-          fontFamily: undefined,
-          color: "#263238",
-        },
-      },
-      xaxis: {
-        type: 'datetime',
-        axisBorder: {
-          show: true,
-          color: "black",
-        },
-      },
-      yaxis: [
-        {
-          seriesName: "Level",
-          axisTicks: {
-            show: true,
-          },
-          axisBorder: {
-            show: true,
-            color: "#247BA0",
-          },
-          labels: {
-            style: {
-              colors: "#247BA0",
-            },
-          },
-          title: {
-            text: primaryAxisText,
-            style: {
-              color: "#247BA0",
-              fontSize: "18px",
-            },
-          },
-          tooltip: {
-            enabled: true,
-          },
-        },
-        {
-          seriesName: secondaryAxisText,
-          opposite: true,
-          axisTicks: {
-            show: true,
-          },
-          axisBorder: {
-            show: true,
-            color: "#FF1654",
-          },
-          labels: {
-            style: {
-              colors: "#FF1654",
-            },
-          },
-          title: {
-            text: "Temperature",
-            style: {
-              color: "#FF1654",
-              fontSize: "18px",
-            },
-          },
-        },
-      ],
-      colors: ["#247BA0", "#FF1654"],
-      stroke: {
-        curve: "smooth",
-        width: 1.5,
+const DualAxisChart = ({
+  chartData,
+  title,
+  primaryAxisText,
+  secondaryAxisText,
+}) => {
+  const chartOptions = {
+    chart: {
+      type: "line",
+      //height: 100,
+      //width: 500,
+      zoom: {
+        allowMouseWheelZoom: false,
       },
     },
-    series: [
+    responsive: [
       {
-        name: "Water Level",
-        data: chartData[0]
-      },
-      {
-        name: "Temperature",
-        data: chartData[1]
+        breakpoint: 768, // Applied on screens <= 768px wide
+        options: {
+          chart: {
+            width: "100%", // Or a smaller fixed width
+            height: 300,
+          },
+          title: {
+            offsetY: 20,
+            style: {
+              fontSize: "12px",
+            },
+          },
+          stroke: {
+            width: 1,
+          },
+        },
       },
     ],
-  });
+    legend: {
+      show: true,
+      position: "bottom",
+    },
+    fill: {
+      type: "solid",
+      colors: ["#0096FF", "#fc3d03"],
+      opacity: [1.0, 0.8],
+    },
+    xaxis: {
+      type: "datetime", // Crucial for time series
+      labels: {
+        format: "dd/MM/yy",
+        datetimeUTC: false,
+      },
+    },
+    yaxis: [
+      {
+        axisBorder: {
+          show: true,
+        },
+        title: {
+          text: primaryAxisText,
+          style: {
+            fontSize: "12px",
+            fontWeight: "light",
+          },
+        },
+      },
+      {
+        axisBorder: {
+          show: true,
+        },
+        title: {
+          text: secondaryAxisText,
+          style: {
+            fontSize: "12px",
+            fontWeight: "light",
+          },
+        },
+        opposite: true,
+      },
+    ],
+    stroke: {
+      width: 2,
+      curve: "smooth",
+    },
+    tooltip: {
+      x: {
+        format: "dd/MM/yy hh:mm:ss",
+      },
+    },
+    theme: {
+      mode: "dark",
+      palette: "palette1",
+      monochrome: {
+        enabled: false,
+        color: "#255aee",
+        shadeTo: "light",
+        shadeIntensity: 0.65,
+      },
+    },
+    title: {
+      text: `${title} - ${chartData[0].data.length} points`,
+      align: "center",
+      margin: 10,
+      style: {
+        fontSize: "18px",
+        fontWeight: "light",
+        fontFamily: undefined,
+        color: "#FFFFFF",
+      },
+    },
+  };
 
   return (
-    <div className="m-2 lg:m-20 lg:mt-7">
-      <div>
-        <ChartCard>
-          <Chart
-            options={chartOptions.options}
-            series={chartOptions.series}
-            height="700"
-            width="100%"
-            charttype="line"
-          />
-        </ChartCard>
-      </div>
+    <div className="mt-5 lg:m-20 lg:mt-10 border-2 border-gray-200 p-1">
+      <Chart
+        options={chartOptions}
+        series={chartData}
+        height="700"
+        width="100%"
+      />
     </div>
   );
 };

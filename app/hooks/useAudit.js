@@ -9,8 +9,7 @@ const useAuditTrail = () => {
                 logDateTime: Math.floor(Date.now() / 1000),
                 userId: 'current user id',
                 action: action,
-                timestamp: new Date().toISOString(),
-                //metadata: metadata
+                metadata: metadata
             }
 
             helperService.updateAuditTrail(action,logData);

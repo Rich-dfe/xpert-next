@@ -59,7 +59,7 @@ export default function WlHome() {
   } = useLoggers();
 
   const API_LOGGERS = waterLevelLoggers;
-
+  //console.log('SEL', selectedLogger);
   const handleSelectedLogger = async (selectLoggerId) => {
     setIsLoading(true);
     const selectedLoggerData = await loggersService.fetchGeneralLoggerInfo(
@@ -74,7 +74,6 @@ export default function WlHome() {
 
   const handleLoggerConfigForm = async (configFormData) => {
     //Append the logger id to the settings object for the service request.
-    
     configFormData.id = selectedLogger[0].id;
     const updateConfigSettings = await settingsService.saveLoggerConfigSettings(
       configFormData
@@ -83,7 +82,7 @@ export default function WlHome() {
     openModal('Succcess!','Your logger config settings have been saved.','green');
     await fetchSettingsVersion(selectedLogger[0].id);
     //Record the action to the audit log
-    recordAction('Logger Config',configFormData);
+    recordAction('Logger Config',configFormData,selectedLogger[0].logger_uid);
   };
 
   useEffect(() => {

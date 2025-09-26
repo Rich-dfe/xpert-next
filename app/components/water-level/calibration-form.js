@@ -195,7 +195,7 @@ function WaterLevelCalibrationForm({
     const calUpdateResponse = await loggersService.updateUserCalibrationData(formData);
     //console.log(calUpdateResponse);
     if(calUpdateResponse.affectedRows === 1){
-      recordAction('Water Level Calibration',formData,selectedLogger[0].id);
+      recordAction('Water Level Calibration',formData,selectedLogger[0].logger_uid);
       fetchSettingsVersion(selectedLogger[0].id);
       setFetchCalData(!fetchCalData);
       openModal('Succcess','Your settings have been saved.','green');

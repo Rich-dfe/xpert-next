@@ -38,7 +38,7 @@ const helperService = {
       return response;
       
     }catch(error){
-      console.error('Cannot update settings version');
+      console.error('Cannot update settings version',error);
     }
   }
 

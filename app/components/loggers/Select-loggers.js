@@ -3,7 +3,7 @@ import InfoCard from "../Info-card";
 import FormStrip from "../Form-strip";
 import { decimalToHex } from "@/app/utils.js/formatters/formatSerialNumber";
 import { useState, useEffect } from "react";
-import { XMarkIcon, CheckIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon, CheckIcon, InformationCircleIcon, Battery100Icon,CalendarIcon,ServerIcon,RssIcon } from "@heroicons/react/24/solid";
 import Spinner from "../spinner";
 
 
@@ -46,51 +46,68 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
         <InfoCard>
           <table className="table-auto">
             <tbody>
-              <tr>
+              <tr className="text-left">
+                <th></th>
                 <th>Parameter</th>
                 <th>Value</th>
               </tr>
               <tr>
-                <td>Date</td>
+                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
+                <td>Date Logged</td>
                 <td>{(latestDiagnosticData.formattedLogDateTime === null) ? noDataPlaceHolder : latestDiagnosticData.formattedLogDateTime[0]}</td>
               </tr>
               <tr>
+                <td><hr className="my-2 border-t border-gray-400"></hr></td>
+                <td><hr className="my-2 border-t border-gray-400"></hr></td>
+                <td><hr className="my-2 border-t border-gray-400"></hr></td>
+              </tr>
+              <tr>
+                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Model</td>
                 <td>{model}</td>
               </tr>
               <tr>
+                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Serial No'</td>
                 <td>{(latestDiagnosticData.loggerUid > 0) ? decimalToHex(latestDiagnosticData.loggerUid) : noDataPlaceHolder}</td>
               </tr>
               <tr>
+                <td><Battery100Icon className="size-4 text-green-600"/></td>
                 <td>Battery Volts</td>
                 <td>{(latestDiagnosticData.diagnostics[0].batteryVoltage === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].batteryVoltage}</td>
               </tr>
               <tr>
+                <td><CalendarIcon  className="size-4 text-blue-500"/></td>
                 <td>Days Remaing</td>
                 <td>{(latestDiagnosticData.diagnostics[0].daysRemaining === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].daysRemaining}</td>
               </tr>
               <tr>
+                <td><RssIcon  className="size-4 text-blue-500"/></td>
                 <td>RSSI</td>
                 <td>{(latestDiagnosticData.diagnostics[0].rssi === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].rssi}</td>
               </tr>
               <tr>
+                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Status Flags</td>
                 <td>{(latestDiagnosticData.diagnostics[0].statusFlags === null) ? noDataPlaceHolder : latestDiagnosticData.diagnostics[0].statusFlags}</td>
               </tr>
               <tr>
-                <td><hr class="my-2 border-t border-gray-400"></hr></td>
-                <td><hr class="my-2 border-t border-gray-400"></hr></td>
+                <td><hr className="my-2 border-t border-gray-400"></hr></td>
+                <td><hr className="my-2 border-t border-gray-400"></hr></td>
+                <td><hr className="my-2 border-t border-gray-400"></hr></td>
               </tr>
               <tr>
+                <td><ServerIcon  className="size-4 text-blue-500"/></td>
                 <td>Server Settings</td>
                 <td>{(settingsVersion[0].x002F === null) ? noDataPlaceHolder : `v${settingsVersion[0].x002F}`}</td>
               </tr>
               <tr>
+                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Logger Settings</td>
                 <td>{(settingsVersion[0].settingsVersionInUse === null) ? noDataPlaceHolder : `v${settingsVersion[0].settingsVersionInUse}`}</td>
               </tr>
               <tr>
+                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Firmware Version</td>
                 <td>{(selectedLogger[0].firmwareVersionInUse === null) ? noDataPlaceHolder : `v${selectedLogger[0].firmwareVersionInUse}`}</td>
               </tr>
