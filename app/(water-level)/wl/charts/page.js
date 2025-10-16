@@ -10,16 +10,18 @@ import { useModal } from "@/app/hooks/useModal";
 import ModalAlert from "@/app/components/Modal-alert";
 import { useLicenseChecker } from "@/app/hooks/useLicenseChecker";
 import FormStripError from "@/app/components/Form-strip-error";
+import Spinner from "@/app/components/spinner";
 
 export default function WlCharts() {
+  //Firstly check whether the logger uid is available as this is requied for getiing the license data
   const { selectedLogger } = useLoggers();
-//const [isLoading, setIsLoading] = useState(false);
   if(selectedLogger[0].logger_uid === undefined){
     return(
       <FormStripError text="Please Select a logger from the loggers page."></FormStripError>
     )
   }
 
+  const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [displayChartType, setDisplayChartType] = useState(0);
@@ -72,8 +74,6 @@ export default function WlCharts() {
     ],
   ];
 
-  
-  console.log('SELECT',selectedLogger[0].logger_uid);
   //Use the license period checker hook to get the licenses for the slected logger 
   getLicensePeriods(selectedLogger[0].logger_uid);
 
@@ -123,6 +123,7 @@ export default function WlCharts() {
   };
 
   const getChartData = async (startDate, endDate) => {
+    setIsLoading(true);
     if(startDate >= endDate){
       openModal('Error!','Start date must be earlier than the end date.','red');
       return;
@@ -147,7 +148,7 @@ export default function WlCharts() {
       }else if(chartSelect.current == 1){
         setChartDataBottom( chartDataObj);
       }
-      
+      setIsLoading(false);
       //console.log("CHART DATA RESP", chartDataResponse[0].length);
   };
 
@@ -185,6 +186,7 @@ export default function WlCharts() {
       />
       {displayChartType == 0 ? (
         <div>
+        {isLoading ? <Spinner /> : null}
         <DualAxisChart
           chartData={chartData}
           title={chartTitle}

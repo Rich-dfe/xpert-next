@@ -3,14 +3,14 @@ import InfoCard from "../Info-card";
 import FormStrip from "../Form-strip";
 import { decimalToHex } from "@/app/utils.js/formatters/formatSerialNumber";
 import { useState, useEffect } from "react";
-import { XMarkIcon, CheckIcon, InformationCircleIcon, Battery100Icon,CalendarIcon,ServerIcon,RssIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon, CheckIcon, InformationCircleIcon, Battery100Icon,CalendarIcon,ServerIcon,RssIcon,CalendarDaysIcon } from "@heroicons/react/24/solid";
 import Spinner from "../spinner";
 
 
 function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model, isSelectedLogger, selectedLogger, isLoading, settingsVersion}) {
   const [firmwareUpdate, setFirmwareUpdate] = useState(false);
   const [noDataPlaceHolder, setNoDataPlaceHolder] = useState("-----");
-
+  //console.log('SELECTY POOS',loggers);
   const handleChange = (e)=>{
     const { name, value } = e.target;
 
@@ -52,7 +52,7 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
                 <th>Value</th>
               </tr>
               <tr>
-                <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
+                <td><CalendarDaysIcon  className="size-4 text-blue-500"/></td>
                 <td>Date Logged</td>
                 <td>{(latestDiagnosticData.formattedLogDateTime === null) ? noDataPlaceHolder : latestDiagnosticData.formattedLogDateTime[0]}</td>
               </tr>
@@ -99,17 +99,17 @@ function SelectLoggersForm({loggers, onSelectChange, latestDiagnosticData, model
               <tr>
                 <td><ServerIcon  className="size-4 text-blue-500"/></td>
                 <td>Server Settings</td>
-                <td>{(settingsVersion[0].x002F === null) ? noDataPlaceHolder : `v${settingsVersion[0].x002F}`}</td>
+                <td>{(settingsVersion[0].x002F === null) ? noDataPlaceHolder : `${settingsVersion[0].x002F}`}</td>
               </tr>
               <tr>
                 <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Logger Settings</td>
-                <td>{(settingsVersion[0].settingsVersionInUse === null) ? noDataPlaceHolder : `v${settingsVersion[0].settingsVersionInUse}`}</td>
+                <td>{(settingsVersion[0].settingsVersionInUse === null) ? noDataPlaceHolder : `${settingsVersion[0].settingsVersionInUse}`}</td>
               </tr>
               <tr>
                 <td><InformationCircleIcon  className="size-4 text-blue-500"/></td>
                 <td>Firmware Version</td>
-                <td>{(selectedLogger[0].firmwareVersionInUse === null) ? noDataPlaceHolder : `v${selectedLogger[0].firmwareVersionInUse}`}</td>
+                <td>{(selectedLogger[0].firmwareVersionInUse === null) ? noDataPlaceHolder : `${selectedLogger[0].firmwareVersionInUse/100}`}</td>
               </tr>
             </tbody>
           </table>

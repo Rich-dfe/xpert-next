@@ -2,7 +2,6 @@ import FormCard from "../Form-card";
 import FormStrip from "@/app/components/Form-strip";
 import { useState, useEffect } from "react";
 import {
-  isNotEmpty,
   hasMinLength,
   isLessThanOrEqual,
 } from "@/app/utils.js/validation";
@@ -13,7 +12,6 @@ import {
 import {
   XMarkIcon,
   CheckIcon,
-  Bars3Icon,
   CalendarIcon,
 } from "@heroicons/react/24/solid";
 import DatePicker from "react-datepicker";
@@ -229,7 +227,7 @@ function LoggerConfigForm({ onSubmit, initialData }) {
                     icon={<CalendarIcon className="text-blue-400" />}
                     id="configStartDate"
                     name="configStartDate"
-                  /> : <div className="text-gray-900 bg-green-400 py-1.5 px-4.5 mt-3.5 rounded-md">Immediate Start</div>}
+                  /> : <div className="text-gray-200 bg-gray-700 py-1.5 px-4.5 mt-3.5 rounded-md">Immediate Start</div>}
                 </div>
               </div>
             </div>

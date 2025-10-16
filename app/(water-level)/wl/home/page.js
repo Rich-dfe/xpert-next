@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation"; 
 import LoggerConfigForm from "@/app/components/config/Form-logger-config";
 import SelectLoggersForm from "@/app/components/loggers/Select-loggers";
 import MapBox from "@/app/components/loggers/Map-box";
@@ -12,6 +13,7 @@ import ModalAlert from "@/app/components/Modal-alert";
 import useAuditTrail from "@/app/hooks/useAudit";
 
 export default function WlHome() {
+  const searchParams = useSearchParams();
   const {isOpen,message,title,type,openModal,closeModal} = useModal();
   const {version,fetchSettingsVersion} = useSettingsVersion();
   
@@ -51,15 +53,38 @@ export default function WlHome() {
 
   //Get the loggers context
   const {
-    waterLevelLoggers,
     selectedLogger,
     setSelectedLogger,
     isSelectedLogger,
     setIsSelectedLogger,
+    selectedLoggerCategory,
+    handleSetLoggerCategory,
+    allLoggers,
+    isLoading: isContextLoading,
   } = useLoggers();
 
-  const API_LOGGERS = waterLevelLoggers;
-  //console.log('SEL', selectedLogger);
+  const API_LOGGERS = selectedLoggerCategory;
+
+  useEffect(() => {
+    // 1. Only run this if the context's main data fetching is complete
+    if (!isContextLoading) { 
+        
+      // 2. Check if selectedLoggerCategory is empty (meaning state wasn't set by click)
+      if (selectedLoggerCategory.length === 0 && allLoggers.length > 0) {
+        
+        // 3. Get the category ID from the URL (e.g., loggerType=18)
+        const loggerType = searchParams.get('loggerType');
+        
+        if (loggerType) {
+          //console.log(`Fallback: State was empty, setting category from URL: ${loggerType}`);
+          // 4. Call the context setter function to load the correct array
+          handleSetLoggerCategory(Number(loggerType));
+        }
+      }
+    }
+    // Dependencies: Rerun if context loading status or selected category status changes.
+  }, [isContextLoading, selectedLoggerCategory.length, searchParams, allLoggers.length, handleSetLoggerCategory]);
+  
   const handleSelectedLogger = async (selectLoggerId) => {
     setIsLoading(true);
     const selectedLoggerData = await loggersService.fetchGeneralLoggerInfo(

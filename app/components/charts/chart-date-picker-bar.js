@@ -81,10 +81,16 @@ const ChartDatePickerBar = ({
           />
         </div>
         <div>
+          <label
+            className="block text-gray-300 text-sm font-medium"
+            htmlFor="dataType"
+          >
+            View Data
+          </label>
           <select
-            className="mt-6 mb-3 block w-full pl-3 pr-7 py-2 text-base border border-gray-700 bg-gray-700 rounded focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300"
-            id="type"
-            name="Type"
+            className="mt-1 mb-3 block w-full pl-3 pr-7 py-2 text-base border border-gray-700 bg-gray-700 rounded focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300"
+            id="dataType"
+            name="dataType"
             onChange={onChangeChartType}
           >
             <option value="0">Primary</option>
@@ -92,10 +98,16 @@ const ChartDatePickerBar = ({
           </select>
         </div>
         <div>
+          <label
+            className="block text-gray-300 text-sm font-medium mb-1"
+            htmlFor=" chartSelect"
+          >
+            Plot to:
+          </label>
           <select
-            className="mt-6 mb-3 block w-full pl-3 pr-7 py-2 text-base border border-gray-700 bg-gray-700 rounded focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300"
-            id="type"
-            name="Type"
+            className="mt-1 mb-3 block w-full pl-3 pr-7 py-2 text-base border border-gray-700 bg-gray-700 rounded focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300"
+            id="chartSelect"
+            name="chartSelect"
             onChange={onChangeChartSelect}
           >
             <option value="0">Top</option>

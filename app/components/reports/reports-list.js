@@ -3,6 +3,7 @@ import FormStrip from "@/app/components/Form-strip";
 import ReportListItem from "@/app/components/reports/report-list-item";
 
 const ReportsList = ({ reportsList }) => {
+  console.log('REPORTS',reportsList);
   return (
     <>
       <FormCard>

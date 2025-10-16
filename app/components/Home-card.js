@@ -1,9 +1,6 @@
-import Link from "next/link";
-
 const HomeCard = (props) => {
   return (
     <>
-    <Link href={props.link}>
     <div className="max-w-sm rounded overflow-hidden shadow-2xl/40  bg-gray-800 hover:bg-gray-950">
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2 text-green-400">{props.product} {props.qty}</div>
@@ -16,7 +13,6 @@ const HomeCard = (props) => {
         </button>
       </div>
     </div>
-    </Link>
     </>
   );
 };

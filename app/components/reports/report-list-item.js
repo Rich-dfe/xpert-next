@@ -1,6 +1,5 @@
 import ReportCard from "./report-list-card";
 import { DocumentTextIcon } from "@heroicons/react/24/solid";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
 
 const ReportListItem = ({ fileName, modified }) => {
   const baseUrl = "https://clientreportsprocessed.s3.ap-southeast-2.amazonaws.com/"
