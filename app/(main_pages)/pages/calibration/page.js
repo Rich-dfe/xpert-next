@@ -1,5 +1,6 @@
 "use client";
-import WaterLevelCalibrationForm from "@/app/components/water-level/calibration-form";
+import WaterLevelCalibrationForm from "@/app/components/calibration/Water-level-cal-form";
+import ParCalibrationForm from "@/app/components/calibration/Par-cal-form";
 import { useLoggers } from "@/app/store/user-loggers-context";
 import helpContent from "@/app/content/calibration-help.json"
 
@@ -14,7 +15,8 @@ const { waterLevelLoggers, selectedLogger, setSelectedLogger, isSelectedLogger, 
         <div className="grid grid-cols-1 xl:grid-cols-3">
           <div></div>
           <div>
-            <WaterLevelCalibrationForm isSelectedLogger={isSelectedLogger} helpContent={helpContent.waterLevel} selectedLogger={selectedLogger}/>
+            {selectedLogger[0].product_id >= 1 && selectedLogger[0].product_id <=7 && <WaterLevelCalibrationForm isSelectedLogger={isSelectedLogger} helpContent={helpContent.waterLevel} selectedLogger={selectedLogger}/>}
+            {selectedLogger[0].product_id == 18 && <ParCalibrationForm isSelectedLogger={isSelectedLogger} helpContent={helpContent.par} selectedLogger={selectedLogger}/>}
           </div>
           <div></div>
         </div>

@@ -46,7 +46,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 bg-gray-300">
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${18}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${18}`)}
         >
           <HomeCard
             product="PAR"
@@ -56,7 +56,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${1}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${1}`)}
         >
           <HomeCard
             product="Water Level"
@@ -66,7 +66,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${22}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${22}`)}
         >
           <HomeCard
             product="Soil Moisture"
@@ -76,7 +76,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${15}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${15}`)}
         >
           <HomeCard
             product="Temperature"
@@ -86,7 +86,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${19}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${19}`)}
         >
           <HomeCard
             product="Rain Gauge"
@@ -96,7 +96,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${23}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${23}`)}
         >
           <HomeCard
             product="Hydro Wipers"
@@ -106,7 +106,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${31}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${31}`)}
         >
           <HomeCard
             product="Conductivity"
@@ -116,7 +116,7 @@ export default function Home() {
         </div>
         <div 
         className="mt-8 mb-8 ml-4 mr-4 cursor-pointer"
-        onClick={() => handleCardClick(`/wl/home?loggerType=${12}`)}
+        onClick={() => handleCardClick(`/pages/home?loggerType=${12}`)}
         >
           <HomeCard
             product="Depth"

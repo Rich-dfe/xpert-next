@@ -18,6 +18,38 @@ export function isLessThanOrEqual(value, minValue){
     return value <= minValue;
 }
 
+export function isNumber(value){
+    var regex = /^[0-9]+([.][0-9]+)?$/;
+    if (!value.match(regex)) {
+      return true;
+    }
+    return false;
+  }
+
+export function isValuePresent(value, arr){
+    //const numbers = [10, 20, 30, 40, 50];
+    //const searchNumber = 25;
+
+    if (!arr.includes(value)) {
+        //console.log(`${value} is not found in the array.`);
+        return false;
+    } else {
+        //console.log(`${value} is found in the array.`);
+        return true;
+    }
+}
+
+export const isInputEmpty = (value) => {
+    // Trim whitespace and check if the resulting string is empty.
+    // Also handles null or undefined values.
+    if (typeof value === 'string') {
+        return value.trim().length === 0;
+    }
+    return !value; // Fallback for null, undefined, 0, false (which might be unintended)
+};
+
+
+
 export function isWaterLevelLoggerReadingValid(value){
     //the value read from the xtract app = 1000.0 to 6553.5 or 10000 to 65535
     let strValue = value.toString();

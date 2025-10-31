@@ -23,27 +23,27 @@ const productType = "Water Level";
 const navLinks = [
   {
     id: 1,
-    url: "/wl/home",
+    url: "/pages/home",
     linkText: "Loggers",
   },
   {
     id: 2,
-    url: "/wl/charts",
+    url: "/pages/charts",
     linkText: "Charts",
   },
   {
     id: 3,
-    url: "/wl/calibration",
+    url: "/pages/calibration",
     linkText: "Calibration",
   },
   {
     id: 4,
-    url: "/wl/reports",
+    url: "/pages/reports",
     linkText: "Reports",
   },
   {
     id: 5,
-    url: "/wl/groups",
+    url: "/pages/groups",
     linkText: "Groups",
   },  
   {

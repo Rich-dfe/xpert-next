@@ -6,8 +6,8 @@
     "buttonText": "Help"
   },
   "par": {
-    "pageTitle": "Water Level Calibration",
-    "mainContent": "<div>\n  <h1>Welcome!</h1>\n<p>This is some <strong>HTML content</strong> loaded from a JSON file.</p>\n  <ul>\n    <li>Item A</li>\n    <li>Item B</li>\n  </ul>\n</div>",
+    "pageTitle": "PAR Calibration",
+    "mainContent": "<div>  <ul>\n    <li><strong>Logger Readings Total: </strong>The sum of all logger readings taken over the duration of the calibration procedure.\n <li><strong>Reference Reading Average: </strong>The sum of the reference readings divided by the number of readings taken over the duration of the calibration procedure.\n <li><strong>Logging Interval: </strong>Non-editable field set in the 'Logger Configuration' section of the 'Loggers' page.\n  <li><strong>Test Duration: </strong>The total duration in minutes over which readings were taken.\n<li><li><strong>Sensitivity:</strong> Consider 'High' sensitivity for underwater and 'Low' for 'in air' measurements.\n</li><strong>Reference Units: </strong>The units used by the reference meter.\n<li><strong>Pre-calibration reset: </strong><strong style=\"color: red;\">IMPORTANT!</strong> Set this to clear any existing settings before calibration. Press Submit and install settings into logger before continuing. </strong></li></div>",
     "footerNote": "<p><em>Copyright &copy; 2025. All rights reserved.</em></p>",
     "buttonText": "Help"
   }
