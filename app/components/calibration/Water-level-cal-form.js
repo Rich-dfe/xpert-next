@@ -35,6 +35,7 @@ function WaterLevelCalibrationForm({
 }) {
   
   const [isLoading, setIsLoading] = useState(false);
+  const [showServerSideCalOption, setShowServerSideCalOption] = useState(false);
   //The fetchCalData toggle state is used as a way of triggering a re-render when the form is submitted.
   //This allows the calculated resolution and temp compensation to be immediately displayed.
   const [fetchCalData, setFetchCalData] = useState(false);
@@ -70,7 +71,11 @@ useEffect(() => {
           4131
         );
         
+        
+        const isCalOptionVisible = selectedLogger[0].firmwareVersionInUse >126 && calData[0].server_side_cal_flag === 0;
+        setShowServerSideCalOption(isCalOptionVisible);
 
+        //console.log('SHOW SSC',showServerSideCalOption);  
         //iterate over the api request object and set the null values so the inputs remain controlled by useState
         for (const key in calData[0]) {
           // Ensure the property is an own property of the object
@@ -82,7 +87,7 @@ useEffect(() => {
           }
         }
 
-        console.log("3. Cal Data", calData);
+        //console.log("3. Cal Data", calData);
         setFormData(calData[0]);
         fetchSettingsVersion(selectedLogger[0].id);
         setIsLoading(false);
@@ -191,7 +196,7 @@ useEffect(() => {
 
     
     //If set to default is true reset it back to false
-    setPreCalStatus(!preCalStatus);
+    setPreCalStatus(false);
   };
 
   const apiUpdateCalData = async (formData) => {
@@ -409,7 +414,9 @@ useEffect(() => {
             </div>
           </div>
           <div>
-             {/* RESET CALIBRATION SWITCH */}
+             {/* ONLY SHOW THE SSC SWITCH IF FW VERSION >126 AND SSC IS NOT YET SET */}
+             {showServerSideCalOption && (
+            <div>
             <div className="block text-gray-300 text-sm font-medium mb-2 mt-3">
               Server Side Calibration
             </div>
@@ -432,8 +439,17 @@ useEffect(() => {
                 )}
               </span>
             </label>
+            </div>
+             )}
           </div>
           <div>
+            {showServerSideCalOption && (
+            <div className="text-green-400 p-0.5 mt-2">
+              {serverSideCalFlag
+                ? "Server side calibration is recommended but cannot be reverted."
+                : ""}
+            </div>
+            )}
           </div>      
           <div className="flex flex-col lg:col-span-2">
             <span className="block text-sm font- font-medium text-gray-400">

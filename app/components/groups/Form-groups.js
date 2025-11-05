@@ -33,6 +33,15 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
     }
   }
 
+  const handleInputBlur = () => {
+    if (newGroupName === null || newGroupName.length < 3) {
+      setNewGroupNameIsInvalid(true);
+      return;
+    } else {
+      setNewGroupNameIsInvalid(false);
+    }
+  };
+
   const handleMoveLoggerForm = (e) =>{
     e.preventDefault();
 
@@ -114,7 +123,13 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
               id="selectLogger"
               name="selectLogger"
               onChange={handleInputChange} 
-              className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm">
+              className={`mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm
+              ${selectedLoggerIsInvalid 
+                  ? 'border-red-400 focus:ring-red-400' // Error styles
+                  : 'border-gray-700 bg-gray-700' // Normal styles
+                  }`
+                }
+              >
               <option value="">Select logger</option>
               {loggers.map((logger) => {
                 return (
@@ -127,7 +142,7 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
             </select>
           </div>
           {/* This className ensures spacing is maintained when the error message is shown */}
-          <div className={"text-red-600 " + (selectedLoggerIsInvalid && "-mt-3")}>
+          <div className={"text-red-400 " + (selectedLoggerIsInvalid && "-mt-3")}>
               {selectedLoggerIsInvalid && <p>Please select a logger!</p>}
             </div>
 
@@ -142,7 +157,13 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
               id="selectGroup"
               name="selectGroup"
               onChange={handleInputChange} 
-              className="mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm">
+              className={`mt-1 mb-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-700 bg-gray-700 focus:outline-none focus:ring-green-400 focus:border-green-400 sm:text-sm text-gray-300 rounded-md shadow-sm">
+              ${selectedGroupIsInvalid 
+                  ? 'border-red-400 focus:ring-red-400' // Error styles
+                  : 'border-gray-700 bg-gray-700' // Normal styles
+                  }`
+                }
+              >
               <option value="">Select Group</option>
               {groups.map((group) => {
                 return (
@@ -153,7 +174,7 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
               })}
               ;
             </select>
-            <div className={"text-red-600 " + (selectedGroupIsInvalid && "-mt-3")}>
+            <div className={"text-red-400 " + (selectedGroupIsInvalid && "-mt-3")}>
               {selectedGroupIsInvalid && <p>Please select a group!</p>}
             </div>
           </div>
@@ -178,14 +199,20 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
                 Create New Group
               </label>
               <input
-                className="appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400"
+                className={`appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400"
+                ${newGroupNameIsInvalid 
+                  ? 'border-red-400 focus:ring-red-400' // Error styles
+                  : 'border-gray-700 bg-gray-700' // Normal styles
+                  }`
+                }
                 id="newGroup"
                 name="newGroup"
                 type="text"
                 placeholder="Enter New Group Name"
                 onChange={handleInputChange}
+                onBlur={handleInputBlur}
               />
-              <div className="text-red-600">
+              <div className="text-red-400">
               {newGroupNameIsInvalid && <p>Three or more characters are required!</p>}
             </div>
             </div>
@@ -226,7 +253,7 @@ function GroupsForm({ loggers, groups, handleMoveLogger, handleNewGroup, handleD
               })}
               ;
             </select>
-            <div className={"text-red-600 " + (deleteGroupIdIsInvalid && "-mt-3")}>
+            <div className={"text-red-400 " + (deleteGroupIdIsInvalid && "-mt-3")}>
               {deleteGroupIdIsInvalid && <p>Please select a group to delete!</p>}
             </div>
             </div>

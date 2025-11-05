@@ -87,12 +87,13 @@ function ParCalibrationForm({ isSelectedLogger, helpContent, selectedLogger }) {
   const handleCalibrationForm = async (e) => {
     e.preventDefault();
     
-    const isFormValid = validateForm(formData);
-    console.log('SUBMITTED FORM', formData);
+    
     if (isFormValid) {
       // 3. Form is valid, proceed with API call
       console.log("Form is valid. Submitting data:", formData);
       // ... API call logic here ...
+      const isFormValid = validateForm(formData);
+      console.log('SUBMITTED FORM', formData);
 
     } else {
       // Form is invalid, errors state is updated, display errors to user

@@ -86,6 +86,22 @@ function LoggerConfigForm({ onSubmit, initialData }) {
     setStartDate(sd);
   };
 
+  const handleInputBlur = () => {
+    if (!hasMinLength(loggerName, 3)) {
+      setLoggerNameIsInvalid(true);
+      return;
+    } else {
+      setLoggerNameIsInvalid(false);
+    }
+
+    if (isLessThanOrEqual(totalLoggingIntervalSeconds, 0)) {
+      setIntervalIsInvalid(true);
+      return;
+    } else {
+      setIntervalIsInvalid(false);
+    }
+  };
+
   useEffect(() => {
     // This will log the CURRENT value of inputValue
     if(isTimedStart === false){
@@ -162,15 +178,22 @@ function LoggerConfigForm({ onSubmit, initialData }) {
                 Logger Name
               </label>
               <input
-                className="appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400"
+                //className="appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400" 
+                className={`appearance-none block w-full bg-gray-700 text-gray-300 border border-gray-700 rounded py-2 px-4 leading-tight focus:outline-none focus:ring-green-400 focus:border-green-400 
+                ${loggerNameIsInvalid 
+                  ? 'border-red-400 focus:ring-red-400 focus:border-red-400 bg-red-900/10' // Error styles
+                  : 'border-gray-700 bg-gray-700 focus:ring-green-400 focus:border-green-400' // Normal styles
+                  }`
+                }
                 id="loggerName"
                 name="loggerName"
                 type="text"
                 placeholder="Logger Name"
                 value={loggerName}
                 onChange={handleInputChange}
+                onBlur={handleInputBlur}
               />
-              <div className="text-red-600">
+              <div className="text-red-400">
                 {loggerNameIsInvalid && <p>Invalid logger name!</p>}
               </div>
             </div>
@@ -280,14 +303,20 @@ function LoggerConfigForm({ onSubmit, initialData }) {
                     id="intervalSec"
                     value={loggingIntervalSec}
                     onChange={handleInputChange}
+                    onBlur={handleInputBlur}
                     selected={loggingIntervalSec}
-                    className="w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none focus:ring-green-400 focus:border-green-400 transition text-md font-medium bg-gray-700 text-gray-300"
+                    className={`w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none transition focus:ring-green-400 focus:border-green-400 text-md font-medium bg-gray-700 text-gray-300 rounded-md 
+                    ${intervalIsInvalid 
+                  ? 'border-red-400 focus:ring-red-400' // Error styles
+                  : 'border-gray-700 bg-gray-700' // Normal styles
+                  }`
+                }
                   >
                     {generateOptions(0, 59, 10)}
                   </select>
                 </div>
               </div>
-              <div className="text-red-600">
+              <div className="text-red-400">
                 {intervalIsInvalid && <p>Must be greater than 0!</p>}
               </div>
             </div>
