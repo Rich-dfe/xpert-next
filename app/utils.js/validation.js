@@ -19,8 +19,10 @@ export function isLessThanOrEqual(value, minValue){
 }
 
 export function isNumber(value){
+    //Ensure the value is a string and handle null/undefined
+    const stringValue = String(value);
     var regex = /^[0-9]+([.][0-9]+)?$/;
-    if (!value.match(regex)) {
+    if (!stringValue.match(regex)) {
       return true;
     }
     return false;

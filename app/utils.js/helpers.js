@@ -22,3 +22,17 @@ export function secondsToHoursMinsSecs(totalSeconds) {
 
   return { hrs: formattedHours, mins: formattedMinutes, secs: formattedSeconds };
 }
+
+// Function to generate options (e.g., 00, 01, ..., 23)
+export function generateOptions(lowerLimit, upperLimit, stepSize){
+  const options = [];
+  for (let i = lowerLimit; i <= upperLimit; i += stepSize) {
+    const value = String(i).padStart(2, "0");
+    options.push(
+      <option key={value} value={value}>
+        {value}
+      </option>
+    );
+  }
+  return options;
+};

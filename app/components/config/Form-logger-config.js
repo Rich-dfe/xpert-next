@@ -8,6 +8,7 @@ import {
 import {
   intervalToSeconds,
   secondsToHoursMinsSecs,
+  generateOptions,
 } from "@/app/utils.js/helpers";
 import {
   XMarkIcon,
@@ -79,9 +80,6 @@ function LoggerConfigForm({ onSubmit, initialData }) {
 
   //The date picker needs a separate handler due the way the library works
   const updateStartDate = (sd) => {
-    //const unixStart = Math.floor(new Date(sd).getTime()/1000);
-    //const ustart = Math.floor(unixStart/1000)
-    //console.log("UN SATRT", unixStart);
     setStartDateUnix(Math.floor(new Date(sd).getTime()/1000));
     setStartDate(sd);
   };
@@ -139,20 +137,6 @@ function LoggerConfigForm({ onSubmit, initialData }) {
       totalLoggingIntervalSeconds,
       startDateUnix,
     }); // Call the function passed from the parent
-  };
-
-  // Function to generate options (e.g., 00, 01, ..., 23)
-  const generateOptions = (lowerLimit, upperLimit, stepSize) => {
-    const options = [];
-    for (let i = lowerLimit; i <= upperLimit; i += stepSize) {
-      const value = String(i).padStart(2, "0");
-      options.push(
-        <option key={value} value={value}>
-          {value}
-        </option>
-      );
-    }
-    return options;
   };
 
   useEffect(() => {
@@ -275,7 +259,7 @@ function LoggerConfigForm({ onSubmit, initialData }) {
                     value={loggingIntervalHour}
                     onChange={handleInputChange}
                     selected={loggingIntervalHour}
-                    className="w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none transition focus:ring-green-400 focus:border-green-400 text-md font-medium bg-gray-700 text-gray-300 rounded-md"
+                    className="w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none transition focus:ring-green-400 focus:border-green-400 text-md font-medium bg-gray-700 text-gray-300"
                   >
                     {generateOptions(0, 23, 1)}
                   </select>
@@ -305,7 +289,7 @@ function LoggerConfigForm({ onSubmit, initialData }) {
                     onChange={handleInputChange}
                     onBlur={handleInputBlur}
                     selected={loggingIntervalSec}
-                    className={`w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none transition focus:ring-green-400 focus:border-green-400 text-md font-medium bg-gray-700 text-gray-300 rounded-md 
+                    className={`w-14 p-2 text-center border border-gray-700 rounded-md focus:outline-none transition focus:ring-green-400 focus:border-green-400 text-md font-medium bg-gray-700 text-gray-300 
                     ${intervalIsInvalid 
                   ? 'border-red-400 focus:ring-red-400' // Error styles
                   : 'border-gray-700 bg-gray-700' // Normal styles
