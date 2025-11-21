@@ -1,25 +1,38 @@
 import api from "./axiosInstance";
 
 const chartDataService = {
+    
+    fetchChartData: async (loggerUid,from,to,loggerType,calData) => {
+    var  apiEndpoint = "";
 
-    //Water level primary data
-    fetchWaterLevelChartData: async (loggerUid,from,to) => {
+    if (loggerType <= 7) {
+      apiEndpoint = "/dynamodb/waterlevel";
+    }else if(loggerType == 18){
+      apiEndpoint = "/dynamodb/par";
+    }
+
     const fromSeconds = Math.floor(from/1000);
     const toSeconds = Math.floor(to/1000);
     
-    // console.log('START',fromSeconds);
+    //console.log('START',fromSeconds);
     // console.log('END',toSeconds);
     // console.log('UID',loggerUid);
-
-
     try {
-      const response = await api.get("/dynamodb/waterlevel", {
+      const response = await api.post(apiEndpoint,calData, {
         params: { 
             uid: loggerUid, 
             from: fromSeconds,
             to: toSeconds
         },
       });
+
+      // const response = await api.post(apiEndpoint, calData,{
+      //   params: { 
+      //       uid: loggerUid, 
+      //       from: fromSeconds,
+      //       to: toSeconds
+      //   },
+      // });
       console.log("Service response", response);
       return response.data;
     } catch (error) {
@@ -28,6 +41,25 @@ const chartDataService = {
       //await signOut();
     }
   }
+
+    //Water level primary data
+  //   fetchWaterLevelChartData: async (loggerUid,from,to) => {
+  //   const fromSeconds = Math.floor(from/1000);
+  //   const toSeconds = Math.floor(to/1000);
+  //   try {
+  //     const response = await api.get("/dynamodb/waterlevel", {
+  //       params: { 
+  //           uid: loggerUid, 
+  //           from: fromSeconds,
+  //           to: toSeconds
+  //       },
+  //     });
+  //     console.log("Service response", response);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.log("Server response error", error);
+  //   }
+  // }
 
 }
 

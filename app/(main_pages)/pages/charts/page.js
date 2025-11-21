@@ -12,6 +12,7 @@ import ModalAlert from "@/app/components/Modal-alert";
 import { useLicenseChecker } from "@/app/hooks/useLicenseChecker";
 import FormStripError from "@/app/components/Form-strip-error";
 import Spinner from "@/app/components/spinner";
+import loggersService from "@/app/service/loggersService";
 
 export default function WlCharts() {
   //Firstly check whether the logger uid is available as this is requied for getiing the license data
@@ -28,44 +29,74 @@ export default function WlCharts() {
   const [displayChartType, setDisplayChartType] = useState(0);
   const [isDataReady, setIsDataReady] = useState(false);
   const chartType = useRef(0);
+  const chartCalData = useRef([{}]);
 
   const { isOpen, message, title, type, openModal, closeModal } = useModal();
   const { licensePeriods, getLicensePeriods, checkLicenseValid } =
     useLicenseChecker();
   const chartSelect = useRef(0); // 0 = top chart, 1= bottom chart
+  const [chartAttributes, setChartAttributes] = useState({
+    chartType: 1,
+    chartTitle: "Water Level & Temperature",
+    primaryAxisText: "Water Level (mm)",
+    secondaryAxisText: "Temperature",
+  });
 
-  let chartTitle = "";
-  let primaryAxisText = "";
-  let secondaryAxisText = "";
+  console.log("CHART CAL DATA", chartCalData);
+  useEffect(() => {
+    async function setChartParams() {
+    if (selectedLogger[0].product_id <= 7) {
+      setChartAttributes({
+        chartType: 1,
+        chartTitle: "Water Level & Temperature",
+        primaryAxisText: "Water Level (mm)",
+        secondaryAxisText: "Temperature",
+      });
+    } else if (selectedLogger[0].product_id == 18) {
+      //1. SET THE CHART ATTRIBUTES FOR DISPLAY
+      setChartAttributes({
+        chartType: 2,
+        chartTitle: "PAR & Temperature",
+        primaryAxisText: "PAR",
+        secondaryAxisText: "Temperature",
+      });
+      //2. GET THE CAL DATA FOR THE SELECTED LOGGER SO THE CHART DATA CAN BE CALIBRATED
+      const calData = await loggersService.fetchUserCalibrationData(
+          selectedLogger[0].id,
+          4132
+        );
+        chartCalData.current = calData;
 
-  if (selectedLogger[0].product_id <= 7) {
-    chartTitle = "Water Level & Temperature";
-    primaryAxisText = "Water Level (mm)";
-    secondaryAxisText = "Temperature";
-  } else if (selectedLogger[0].product_id == 18) {
-    chartTitle = "PAR & Temperature";
-    primaryAxisText = "PAR";
-    secondaryAxisText = "Temperature";
+    } else if(selectedLogger[0].product_id >= 15 && selectedLogger[0].product_id <=17){
+        setChartAttributes({
+        chartType: 1,
+        chartTitle: "Temperature",
+        primaryAxisText: "Temperature Ext",
+        secondaryAxisText: "Temperature Int",
+      });
+    }
   }
+  setChartParams();
+  }, []);
 
   const [chartData, setChartDataTop] = useState([
     {
-      name: primaryAxisText,
+      name: chartAttributes.primaryAxisText,
       data: [],
     },
     {
-      name: secondaryAxisText,
+      name: chartAttributes.secondaryAxisText,
       data: [],
     },
   ]);
 
   const [chartDataTwo, setChartDataBottom] = useState([
     {
-      name: primaryAxisText,
+      name: chartAttributes.primaryAxisText,
       data: [],
     },
     {
-      name: secondaryAxisText,
+      name: chartAttributes.secondaryAxisText,
       data: [],
     },
   ]);
@@ -73,13 +104,13 @@ export default function WlCharts() {
   const chartDataObj = [
     [
       {
-        name: primaryAxisText,
+        name: chartAttributes.primaryAxisText,
         data: [],
       },
     ],
     [
       {
-        name: secondaryAxisText,
+        name: chartAttributes.secondaryAxisText,
         data: [],
       },
     ],
@@ -142,6 +173,7 @@ export default function WlCharts() {
   };
 
   const getChartData = async (startDate, endDate) => {
+    console.log('GETCHARTDATA',chartCalData.current[0]);
     setIsLoading(true);
     if (startDate >= endDate) {
       openModal(
@@ -152,14 +184,17 @@ export default function WlCharts() {
       return;
     }
 
-    const chartDataResponse = await chartDataService.fetchWaterLevelChartData(
+    //HERE WE NEED TO PUT CONDITIONAL CHART DATA FETCHING
+    const chartDataResponse = await chartDataService.fetchChartData(
       selectedLogger[0].logger_uid,
       startDate,
-      endDate
+      endDate,
+      selectedLogger[0].product_id,
+      chartCalData.current
     );
 
     console.log("CHART DATA RESPONSE", chartDataResponse);
-    if (chartDataResponse[0].length === 0) {
+    if (chartDataResponse.length === 0) {
       openModal(
         "Notice!",
         "There are no data points for the selected period.",
@@ -167,9 +202,9 @@ export default function WlCharts() {
       );
     }
 
-    chartDataObj[0].name = primaryAxisText;
+    chartDataObj[0].name = chartAttributes.primaryAxisText;
     chartDataObj[0].data = chartDataResponse[0];
-    chartDataObj[1].name = secondaryAxisText;
+    chartDataObj[1].name = chartAttributes.secondaryAxisText;
     chartDataObj[1].data = chartDataResponse[1];
     if (chartSelect.current == 0) {
       setChartDataTop(chartDataObj);
@@ -215,22 +250,44 @@ export default function WlCharts() {
       {displayChartType == 0 ? (
         <div>
           {isLoading ? <Spinner /> : null}
-          <DualAxisChart
-            chartData={chartData}
-            title={chartTitle}
-            primaryAxisText={primaryAxisText}
-            secondaryAxisText={secondaryAxisText}
-            dataPoints={chartData[0].data.length}
-          />
-          <DualAxisChart
-            chartData={chartDataTwo}
-            title={chartTitle}
-            primaryAxisText={primaryAxisText}
-            secondaryAxisText={secondaryAxisText}
-            S
-          />
+          {chartAttributes.chartType === 1 && (
+            <div>
+              <DualAxisChart
+                chartData={chartData}
+                title={chartAttributes.chartTitle}
+                primaryAxisText={chartAttributes.primaryAxisText}
+                secondaryAxisText={chartAttributes.secondaryAxisText}
+                dataPoints={chartData[0].data.length}
+              />
+              <DualAxisChart
+                chartData={chartDataTwo}
+                title={chartAttributes.chartTitle}
+                primaryAxisText={chartAttributes.primaryAxisText}
+                secondaryAxisText={chartAttributes.secondaryAxisText}
+                dataPoints={chartData[0].data.length}
+              />
+            </div>
+          )}
+
+          {chartAttributes.chartType === 2 && (
+            <div>
+              <DualAxisAreaChart
+                chartData={chartData}
+                title={chartAttributes.chartTitle}
+                primaryAxisText={chartAttributes.primaryAxisText}
+                secondaryAxisText={chartAttributes.secondaryAxisText}
+                dataPoints={chartData[0].data.length}
+              />
+              <DualAxisAreaChart
+                chartData={chartDataTwo}
+                title={chartAttributes.chartTitle}
+                primaryAxisText={chartAttributes.primaryAxisText}
+                secondaryAxisText={chartAttributes.secondaryAxisText}
+                dataPoints={chartData[0].data.length}
+              />
+            </div>
+          )}
         </div>
-    
       ) : (
         <ChartDiagnosticAll />
       )}

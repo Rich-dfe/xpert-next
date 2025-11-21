@@ -9,6 +9,7 @@ const DualAxisChart = ({
   title,
   primaryAxisText,
   secondaryAxisText,
+  dataPoints
 }) => {
   const chartOptions = {
     chart: {
@@ -47,6 +48,14 @@ const DualAxisChart = ({
       type: "solid",
       colors: ["#0096FF", "#fc3d03"],
       opacity: [1.0, 0.8],
+    },
+    title: {
+      text: `${title}`,
+      align: "left",
+    },
+    subtitle: {
+      text: `${dataPoints} data points`,
+      align: "left",
     },
     xaxis: {
       type: "datetime", // Crucial for time series
@@ -92,24 +101,13 @@ const DualAxisChart = ({
       },
     },
     theme: {
-      mode: "dark",
+      mode: "light",
       palette: "palette1",
       monochrome: {
         enabled: false,
         color: "#255aee",
         shadeTo: "light",
         shadeIntensity: 0.65,
-      },
-    },
-    title: {
-      text: `${title} - ${chartData[0].data.length} points`,
-      align: "center",
-      margin: 10,
-      style: {
-        fontSize: "18px",
-        fontWeight: "light",
-        fontFamily: undefined,
-        color: "#FFFFFF",
       },
     },
   };
