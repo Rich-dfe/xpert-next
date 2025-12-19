@@ -8,7 +8,8 @@ const ChartDiagnosticLine = ({chartData, chartTitle}) => {
     options: {
       chart: {
         id: "diagnostic-voltage",
-        type: 'line'
+        type: 'line',
+        background: '#f0f0f0',
       },
       dataLabels: {
         enabled: false,

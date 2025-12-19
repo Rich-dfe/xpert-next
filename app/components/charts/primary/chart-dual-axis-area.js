@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
-import chartDataService from "@/app/service/chartDataService";
+"use client"
+
+import { useMemo } from "react";
+
 import dynamic from "next/dynamic";
-import ChartCard from "../chart-card";
+
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const DualAxisAreaChart = ({
@@ -11,20 +13,43 @@ const DualAxisAreaChart = ({
   secondaryAxisText,
   dataPoints,
 }) => {
-    console.log('IS DATATERY',chartData);
+    //console.log('IN PAR CHART', chartData?.[0]?.limits?.[0]);
+    console.log('IN PAR CHART', chartData);
+    //console.log('IN PAR CHART POINTS', dataPoints);
     if (chartData && chartData.length > 0) {
   }
   if (chartData && chartData.length > 1) {
     chartData[1].type = 'line';
   }
+
   const chartOptions = {
     chart: {
       type: "line",
-      height: 350,
+      //height: 350,
       zoom: {
-        enabled: false,
+        enabled: true,
       },
     },
+    responsive: [
+      {
+        breakpoint: 768, // Applied on screens <= 768px wide
+        options: {
+          chart: {
+            width: "100%", // Or a smaller fixed width
+            height: 300,
+          },
+          title: {
+            offsetY: 20,
+            style: {
+              fontSize: "12px",
+            },
+          },
+          stroke: {
+            width: 1,
+          },
+        },
+      },
+    ],
     theme: {
       mode: "light",
       palette: "palette1",
@@ -118,7 +143,31 @@ const DualAxisAreaChart = ({
     legend: {
       horizontalAlign: "left",
     },
-  };
+    annotations: {
+    yaxis: [
+      {
+        y: chartData?.[0]?.limits?.[1],           // Start of the shaded area (lower bound)
+        y2: chartData?.[0]?.limits?.[0],         // End of the shaded area (upper bound)
+        borderColor: '#00000000', // Optional: Set border to transparent if you only want the fill
+        fillColor: '#FFC7C7', // A light red/pink color to indicate danger
+        opacity: 0.5,    // Make the area semi-transparent
+        yAxisIndex: 0,
+        label: {
+          borderColor: '#FF0000',
+          style: {
+            color: '#000',
+            background: '#FFC7C7',
+            fontSize: '10px'
+          },
+          text: 'Saturation Zone', 
+          position: 'right', 
+        }
+      }
+    ]
+  },
+};
+
+  
 
 // Check if series is a non-empty array AND its first item has valid data
 //if (chartData && chartData.length > 0 && chartData[0].data && chartData[0].data.length > 0) {

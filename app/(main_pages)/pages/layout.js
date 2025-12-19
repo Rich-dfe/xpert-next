@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import NavBar from "../../components/Nav-bar";
 import "../../(home-panel)/globals.css";
 import { LoggersProvider } from "@/app/store/user-loggers-context";
+import Providers from "@/app/store/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,9 +60,9 @@ export default function WlLayout({ children }) {
       <body className="min-h-screen bg-gray-600">
         <div id="page">
           <NavBar navLinks={navLinks} productType={productType}/>
-          <LoggersProvider>
+          <Providers>
           {children}
-          </LoggersProvider>
+          </Providers>
         </div>
       </body>
     </html>

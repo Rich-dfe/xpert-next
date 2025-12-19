@@ -64,7 +64,7 @@ const loggersService = {
 
   fetchLatestDiagnosticData: async(uid) => {
     try {
-      const response = await api.get("/dynamodb/diagnostic", {
+      const response = await api.get("/dynamodb/diagnostic/logger", {
         params: { uidDecimal: uid },
       });
       //console.log('SERVICE DIAGNOSTIC DATA 👍', response.data[0]);

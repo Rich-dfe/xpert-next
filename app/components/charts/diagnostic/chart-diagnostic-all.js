@@ -2,23 +2,10 @@ import { useState } from "react";
 import ChartDiagnosticLine from "./chart-diagnostic-line";
 import ChartDiagnosticBar from "./chart-diagnostic-bar";
 
-const ChartDiagnosticAll = () => {
-    const [batteryVoltageData, setBatteryVoltageData] = useState([
-          [1486684800000, 343],
-          [1486771200000, 432],
-          [1486857600000, 311],
-          [1486944000000, 435],
-          [1487030400000, 334],
-          [1487116800000, 528],
-        ]);
-    const [daysRemainingData, setDaysRemainingData] = useState([
-          [1486684800000, 343],
-          [1486771200000, 432],
-          [1486857600000, 311],
-          [1486944000000, 435],
-          [1487030400000, 334],
-          [1487116800000, 528],
-        ]);
+const ChartDiagnosticAll = ({chartData}) => {
+  //console.log("IN DIAGNOSTC ALL",chartData);
+    const [batteryVoltageData, setBatteryVoltageData] = useState(chartData[2]);
+    const [daysRemainingData, setDaysRemainingData] = useState(chartData[3]);
     const [resetCountData, setResetCountData] = useState([
           [1486684800000, 343],
           [1486771200000, 432],

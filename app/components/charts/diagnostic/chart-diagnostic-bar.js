@@ -7,7 +7,8 @@ const ChartDiagnosticBar = ({chartData,chartTitle}) => {
   const [chartOptions, setChartOptions] = useState({
     options: {
         chart: {
-          id: "basic-bar"
+          id: "basic-bar",
+          background: '#f0f0f0',
         },
         grid: {
         show: true,
